@@ -1,0 +1,194 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitlab-config
+  namespace: egov-cicd
+data:
+  gitlab.rb: |
+    external_url 'http://localhost:30012'
+    
+    # Redis 설정
+    # gitlab.rb 수정
+    redis['enable'] = true
+
+    gitlab_rails['redis_host'] = "redis-0.redis-headless.egov-db.svc.cluster.local"
+    gitlab_rails['redis_port'] = 6379
+    gitlab_rails['redis_password'] = "thqkd119!"
+
+
+    # Puma 설정
+    puma['enable'] = true
+    puma['worker_processes'] = 2
+    puma['max_threads'] = 4
+    puma['min_threads'] = 1
+    puma['listen'] = '0.0.0.0'
+    puma['port'] = 9292
+    puma['worker_timeout'] = 60
+
+    # Workhorse 설정
+    gitlab_workhorse['enable'] = true
+    gitlab_workhorse['listen_network'] = 'tcp'
+    gitlab_workhorse['listen_addr'] = '0.0.0.0:8282'
+    gitlab_workhorse['backend'] = 'http://127.0.0.1:9292'
+
+    nginx['enable'] = true
+    nginx['listen_port'] = 80
+
+    # Rails 설정
+    gitlab_rails['env'] = {
+      'RAILS_ENV' => 'production'
+    }
+
+    # PostgreSQL 설정
+    postgresql['enable'] = false
+    gitlab_rails['db_adapter'] = "postgresql"
+    gitlab_rails['db_encoding'] = "unicode"
+    gitlab_rails['db_database'] = "gitlabhq_production"
+    gitlab_rails['db_username'] = "gitlab"
+    gitlab_rails['db_password'] = "gitlab-password"
+    gitlab_rails['db_host'] = "postgresql-0.postgresql-headless.egov-db.svc.cluster.local"
+    gitlab_rails['db_port'] = 5432
+
+    # 시스템 설정
+    unicorn['enable'] = false
+    sidekiq['enable'] = true
+    prometheus_monitoring['enable'] = false
+
+    # Gitaly 설정 (runtime_dir 제거됨)
+    gitaly['enable'] = true
+    gitaly['configuration'] = {
+      storage: [
+        {
+          name: 'default',
+          path: '/var/opt/gitlab/git-data'
+        }
+      ]
+    }
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gitlab
+  namespace: egov-cicd
+spec:
+  serviceName: gitlab-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      securityContext:
+        fsGroup: 998  # git group
+      initContainers:
+      - name: init-gitlab
+        image: busybox
+        command: 
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /var/opt/gitlab/gitlab-workhorse/sockets
+          chmod -R 777 /var/opt/gitlab/gitlab-workhorse
+        volumeMounts:
+        - name: gitlab-workhorse
+          mountPath: /var/opt/gitlab/gitlab-workhorse
+      containers:
+      - name: gitlab
+        image: gitlab/gitlab-ce:16.10.1-ce.0
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        - containerPort: 22
+          name: ssh
+        volumeMounts:
+        - name: gitlab-config
+          mountPath: /etc/gitlab
+        - name: gitlab-config-file
+          mountPath: /etc/gitlab/gitlab.rb
+          subPath: gitlab.rb
+        - name: gitlab-logs
+          mountPath: /var/log/gitlab
+        - name: gitlab-data
+          mountPath: /var/opt/gitlab
+        - name: gitlab-workhorse
+          mountPath: /var/opt/gitlab/gitlab-workhorse
+        - name: ssh-host-keys
+          mountPath: /etc/ssh
+        resources:
+          requests:
+            cpu: "2"
+            memory: "6Gi"
+          limits:
+            cpu: "4"
+            memory: "12Gi"
+      volumes:
+      - name: gitlab-config
+        hostPath:
+          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/config
+          type: DirectoryOrCreate
+      - name: gitlab-config-file
+        configMap:
+          name: gitlab-config
+      - name: gitlab-logs
+        hostPath:
+          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/logs
+          type: DirectoryOrCreate
+      - name: gitlab-data
+        hostPath:
+          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/data
+          type: DirectoryOrCreate
+      - name: gitlab-workhorse
+        hostPath:
+          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/workhorse
+          type: DirectoryOrCreate
+      - name: ssh-host-keys
+        hostPath:
+          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/ssh
+          type: DirectoryOrCreate
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-headless
+  namespace: egov-cicd
+spec:
+  clusterIP: None
+  ports:
+    - port: 80
+  selector:
+    app: gitlab
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab
+  namespace: egov-cicd
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30012
+    - name: https
+      port: 443
+      targetPort: 443
+    - name: ssh
+      port: 22
+      targetPort: 22
+  selector:
+    app: gitlab
+    statefulset.kubernetes.io/pod-name: gitlab-0

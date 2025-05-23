@@ -1,0 +1,28 @@
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: egov-apps-telemetry
+  namespace: egov-app
+spec:
+  accessLogging:
+    - providers:
+      - name: otel-loki
+  tracing:
+    - randomSamplingPercentage: 100.0
+      providers:
+        - name: "otel-tracing"
+      customTags:
+        environment:
+          environment:
+            name: SPRING_PROFILES_ACTIVE
+            defaultValue: "unknown"
+        cluster:
+          literal:
+            value: "egov-cluster"
+        version:
+          header:
+            name: x-version
+            defaultValue: "unknown"
+  metrics:
+    - providers:
+        - name: prometheus

@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-server
+  namespace: egov-infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-server
+  template:
+    metadata:
+      labels:
+        app: gateway-server
+    spec:
+      containers:
+      - name: gateway-server
+        image: gatewayserver:k8s
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "k8s"
+        - name: SERVER_PORT
+          value: "80"
+        - name: SPRING_CLOUD_CONFIG_ENABLED
+          value: "false"
+        - name: SPRING_CLOUD_DISCOVERY_ENABLED
+          value: "false"
+        - name: EUREKA_CLIENT_ENABLED
+          value: "false"
+        # Spring의 property 형식에 맞게 환경변수 매핑
+        - name: token.accessSecret
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: TOKEN_ACCESS_SECRET
+        - name: token.refreshSecret
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: TOKEN_REFRESH_SECRET
+        - name: token.accessExpiration
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: TOKEN_ACCESS_EXPIRATION
+        - name: token.refreshExpiration
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: TOKEN_REFRESH_EXPIRATION
+        - name: roles.roleAdmin
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: ROLES_ROLE_ADMIN
+        - name: roles.roleUser
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: ROLES_ROLE_USER
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-server
+  namespace: egov-infra
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 9000
+    targetPort: 80
+  selector:
+    app: gateway-server

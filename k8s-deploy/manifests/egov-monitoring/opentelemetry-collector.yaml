@@ -1,0 +1,223 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: otel-collector-collector
+  namespace: egov-monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-collector-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes", "nodes/proxy"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-collector-role-binding
+subjects:
+- kind: ServiceAccount
+  name: otel-collector-collector
+  namespace: egov-monitoring
+roleRef:
+  kind: ClusterRole
+  name: otel-collector-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector
+  namespace: egov-monitoring
+spec:
+  mode: daemonset
+  serviceAccount: otel-collector-collector
+  image: otel/opentelemetry-collector-contrib:0.120.0
+  podAnnotations:
+    sidecar.istio.io/inject: "false"
+  env:
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  volumeMounts:
+    - name: varlogcontainers
+      mountPath: /var/log/containers
+    - name: varlogpods
+      mountPath: /var/log/pods
+    - name: varlibdockercontainers
+      mountPath: /var/lib/docker/containers
+  volumes:
+    - name: varlogcontainers
+      hostPath:
+        path: /var/log/containers
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods
+    - name: varlibdockercontainers
+      hostPath:
+        path: /var/lib/docker/containers
+  securityContext:
+    privileged: true
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      filelog:
+        include: [ /var/log/containers/*egov*.log ]
+        exclude: [ /var/log/containers/*istio*.log ]
+        start_at: end
+        include_file_path: true
+        include_file_name: true
+        operators:
+          # 파일 경로에서 컨테이너 이름 추출
+          - type: regex_parser
+            regex: '^.*containers/(?P<pod_name>[^_]+)_(?P<namespace>[^_]+)_(?P<container>[^-]+)-.*\.log$'
+            parse_from: attributes["log.file.path"]
+            parse_to: attributes.container_info
+          # JSON 파싱
+          - type: json_parser
+            parse_to: attributes
+            timestamp:
+              parse_from: attributes.time
+              layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          # 로그 본문 이동
+          - type: move
+            from: attributes.log
+            to: body
+          # 컨테이너 이름 설정
+          - type: move
+            from: attributes.container_info.container
+            to: attributes["log.container.name"]
+          # 로그 타입 추가
+          - type: add
+            field: attributes["log.type"]
+            value: "container"
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: 'istio-proxy'
+              kubernetes_sd_configs:
+                - role: pod
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_pod_container_name]
+                  action: keep
+                  regex: "istio-proxy"
+                - source_labels: [__meta_kubernetes_pod_ip]
+                  action: replace
+                  regex: (.*)
+                  replacement: $1:15090
+                  target_label: __address__
+                - action: replace
+                  regex: (.*)
+                  replacement: /stats/prometheus
+                  target_label: __metrics_path__
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: 'istio_.*'
+                  action: keep
+    processors:
+      batch:
+        timeout: 10s
+        send_batch_size: 1024
+      memory_limiter:
+        check_interval: 5s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      attributes:
+        actions:
+          - key: pod
+            from_attribute: container_info_pod_name
+            action: insert
+          - key: namespace
+            from_attribute: container_info_namespace
+            action: insert
+          - key: container
+            from_attribute: log.container.name
+            action: insert
+          - key: cluster
+            value: "egov"
+            action: insert
+          - key: loki.attribute.labels
+            value:
+              - pod
+              - namespace
+              - container
+              - cluster
+            action: insert
+          - key: loki.resource.labels
+            value:
+              - service.name
+            action: insert
+          - key: k8s.node.name  # 노드 정보 추가
+            from_attribute: K8S_NODE_NAME
+            action: insert
+      resource:
+        attributes:
+          - action: insert
+            key: loki.resource.labels
+            value: service.name
+    exporters:
+      otlp:
+        endpoint: jaeger-collector.egov-monitoring.svc.cluster.local:4317
+        tls:
+          insecure: true
+      prometheus:
+        endpoint: 0.0.0.0:8889
+        namespace: egov-monitoring
+        const_labels:
+          cluster: "egov"
+        send_timestamps: true
+        metric_expiration: 180m
+        enable_open_metrics: true
+        resource_to_telemetry_conversion:
+          enabled: true
+      loki:
+        endpoint: http://loki.egov-monitoring.svc.cluster.local:3100/loki/api/v1/push
+        tls:
+          insecure: true
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch, attributes]
+          exporters: [otlp]
+        metrics:
+          receivers: [prometheus]
+          processors: [memory_limiter, batch]
+          exporters: [prometheus]
+        logs:
+          receivers: [otlp, filelog]
+          processors: [memory_limiter, batch, attributes]
+          exporters: [loki]
+      telemetry:
+        logs:
+          level: "debug"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: egov-monitoring
+spec:
+  ports:
+  - name: grpc-otlp
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
+  - name: http-otlp
+    port: 4318
+    protocol: TCP
+    targetPort: 4318
+  - name: prometheus
+    port: 8889
+    protocol: TCP
+    targetPort: 8889
+  selector:
+    app.kubernetes.io/name: otel-collector-collector

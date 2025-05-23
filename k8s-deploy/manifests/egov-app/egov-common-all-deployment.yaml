@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: egov-common-all-globals
+  namespace: egov-app
+data:
+  globals.properties: |
+    # OS Type (WINDOWS, UNIX)
+    Globals.OsType = UNIX
+
+    # DB Type (mysql, oracle, altibase, tibero, cubrid, maria, postgres, goldilocks)
+    Globals.DbType = mysql
+
+    # Auth Type (dummy, session, security)
+    Globals.Auth = security
+
+    # MainPage Setting
+    Globals.MainPage = /EgovContent.do
+
+    # MySQL Connection Info
+    Globals.mysql.DriverClassName=net.sf.log4jdbc.DriverSpy
+    Globals.mysql.Url=jdbc:log4jdbc:mysql://mysql-0.mysql-headless.egov-db.svc.cluster.local:3306/com
+    Globals.mysql.UserName = com
+    Globals.mysql.Password = xz4fmrSdr1vGGl6UtwPLwA%3D%3D
+
+    # File Upload Path (absolute path required)
+    Globals.fileStorePath = /data/egovframe/upload/
+    Globals.SynchrnServerPath = /data/egovframe/upload/Synch/
+
+    # File Upload Settings
+    Globals.fileUpload.Extensions.Images = .gif.jpg.jpeg.png
+    Globals.fileUpload.Extensions = .gif.jpg.jpeg.png.xls.xlsx
+    Globals.fileUpload.maxSize = 1048576
+    Globals.fileDownload.Extensions = .gif.jpg.jpeg.png
+
+    # Shell File Path Settings
+    Globals.ShellFilePath = globals.properties
+    Globals.ServerConfPath = conf/server.properties
+    Globals.ClientConfPath = conf/client.properties
+    Globals.FileFormatPath = conf/format.properties
+    Globals.GPKIConfPath = conf/gpki.properties
+    Globals.ConfPath = conf
+    Globals.MailRequestPath = mail/request/
+    Globals.MailRResponsePath = mail/response/
+    Globals.SMEConfigPath = conf/SMEConfig.properties
+    Globals.SmsDbConfPath = conf/smsdb.properties
+
+    # UNIX Shell Files
+    SHELL.UNIX.getHostName = prg/sh_001.sh
+    SHELL.UNIX.getDrctryByOwner = prg/getDrctryByOwner.sh
+    SHELL.UNIX.getDrctryOwner = prg/getDrctryOwner.sh
+    SHELL.UNIX.getDrctryAccess = prg/getDrctryAccess.sh
+    SHELL.UNIX.getMountLc = prg/getMountLc.sh
+    SHELL.UNIX.getDiskName = prg/getNetWorkInfo.sh
+    SHELL.UNIX.moveDrctry = prg/moveDrctry.sh
+    SHELL.UNIX.compileSchema = prg/compileSchema.sh
+    SHELL.UNIX.getDiskAttrb = prg/getDiskAttrb.sh
+    SHELL.UNIX.getDiskCpcty = prg/getDiskCpcty.sh
+    SHELL.UNIX.getDiskExst = prg/getDiskExst.sh
+    SHELL.UNIX.getProcInfo = prg/getProcInfo.sh
+
+    # Login Lock Settings
+    Globals.login.Lock = true
+    Globals.login.LockCount = 5
+
+    # Password Expiration Settings
+    Globals.ExpirePwdDay = 180
+
+    # Batch Shell Files WhiteList
+    SHELL.UNIX.batchShellFiles = 
+    SHELL.batchShellFolder = 
+
+    # LDAP Settings
+    ldap.url = ldap://ldap-service:10389
+    ldap.rootDn = c=kr
+    ldap.username = uid=admin,ou=system
+    ldap.password = password
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egov-common-all
+  namespace: egov-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: egov-common-all
+  template:
+    metadata:
+      labels:
+        app: egov-common-all
+    spec:
+      containers:
+      - name: egov-common-all
+        image: egovcommonall:k8s
+        volumeMounts:
+        - name: config-volume
+          mountPath: /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/egovframework/egovProps/globals.properties
+          subPath: globals.properties
+      volumes:
+      - name: config-volume
+        configMap:
+          name: egov-common-all-globals
+          items:
+          - key: globals.properties
+            path: globals.properties
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: egov-common-all
+  namespace: egov-app
+spec:
+  selector:
+    app: egov-common-all
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 32080
+  type: NodePort

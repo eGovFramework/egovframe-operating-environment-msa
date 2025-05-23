@@ -1,0 +1,87 @@
+# Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgresql-secret
+  namespace: egov-db
+type: Opaque
+data:
+  POSTGRES_USER: Z2l0bGFi
+  POSTGRES_PASSWORD: Z2l0bGFiLXBhc3N3b3Jk
+  POSTGRES_DB: Z2l0bGFiaHFfcHJvZHVjdGlvbg==
+---
+# Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-headless
+  namespace: egov-db
+spec:
+  clusterIP: None
+  ports:
+  - port: 5432
+  selector:
+    app: postgresql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: egov-db
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+    targetPort: 5432
+    nodePort: 30432
+  selector:
+    app: postgresql
+    statefulset.kubernetes.io/pod-name: postgresql-0
+---
+# StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql
+  namespace: egov-db
+spec:
+  serviceName: postgresql-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      securityContext:
+        runAsUser: 501
+        runAsGroup: 20
+        fsGroup: 20
+      containers:
+      - name: postgresql
+        image: postgres:15.4
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+        - containerPort: 5432
+          name: postgresql
+        envFrom:
+        - secretRef:
+            name: postgresql-secret
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: postgresql-pvc-nfs

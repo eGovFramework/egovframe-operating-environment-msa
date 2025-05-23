@@ -1,0 +1,78 @@
+server:
+  port: 0 # random port
+
+spring:
+  application:
+    name: EgovHello
+  main:
+    allow-bean-definition-overriding: true
+  config:
+    import: optional:configserver:http://localhost:8888
+  profiles:
+    active: local
+
+logging:
+  pattern:
+    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}","level":"%p","service":"${spring.application.name}","trace":"%X{trace_id}","span":"%X{span_id}","thread":"%t","logger":"%logger{63}","message":"%replace(%m){"\n", "\\n"}%n%ex"}'
+  level:
+    org:
+      egovframe:
+        rte: debug
+      springframework:
+        boot:
+          autoconfigure: error
+        web: debug
+    egovframework:
+      com: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,refresh
+  endpoint:
+    env:
+      enabled: true
+    refresh:
+      enabled: true
+    health:
+      enabled: true
+      show-details: always
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+# OpenTelemetry 설정
+otel:
+  exporter:
+    otlp:
+      endpoint: http://otel-collector.egov-monitoring.svc.cluster.local:4317
+  service:
+    name: ${spring.application.name}
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
+  logs:
+    exporter: otlp
+
+---
+spring:
+  config:
+    activate:
+      on-profile: k8s
+    import: 'optional:configserver:'
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+
+eureka:
+  client:
+    enabled: false
+
+server:
+  port: 80

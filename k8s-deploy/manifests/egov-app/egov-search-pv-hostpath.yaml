@@ -1,0 +1,123 @@
+# Config PV/PVC - hostPath
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: egov-search-config-pv-hostpath
+  namespace: egov-app
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "${SEARCH_BASE_PATH}/config"
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-search-config-pvc-hostpath
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: standard
+  volumeName: egov-search-config-pv-hostpath
+---
+# Model PV/PVC - hostPath
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: egov-search-model-pv-hostpath
+  namespace: egov-app
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "${SEARCH_BASE_PATH}/model"
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-search-model-pvc-hostpath
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+  volumeName: egov-search-model-pv-hostpath
+---
+# Example PV/PVC - hostPath
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: egov-search-example-pv-hostpath
+  namespace: egov-app
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "${SEARCH_BASE_PATH}/example"
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-search-example-pvc-hostpath
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: standard
+  volumeName: egov-search-example-pv-hostpath
+---
+# Cacerts PV/PVC - hostPath
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: egov-search-cacerts-pv-hostpath
+  namespace: egov-app
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "${SEARCH_BASE_PATH}/cacerts"
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-search-cacerts-pvc-hostpath
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: standard
+  volumeName: egov-search-cacerts-pv-hostpath

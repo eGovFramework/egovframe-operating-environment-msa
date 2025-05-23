@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: istio
+  namespace: istio-system
+data:
+  mesh: |-
+    accessLogFile: /dev/stdout
+    defaultConfig:
+      discoveryAddress: istiod.istio-system.svc:15012
+      proxyMetadata: {}
+      tracing:
+        sampling: 100.0
+        custom_tags:
+          environment:
+            literal:
+              value: "egov-cluster"
+    enablePrometheusMerge: true
+    extensionProviders:
+    - name: otel-tracing
+      opentelemetry:
+        service: otel-collector.egov-monitoring.svc.cluster.local
+        port: 4317
+    - name: otel-loki
+      envoyOtelAls:
+        service: otel-collector.egov-monitoring.svc.cluster.local
+        port: 4317
+        logFormat:
+          labels:
+            pod: "%ENVIRONMENT(POD_NAME)%"
+            namespace: "%ENVIRONMENT(POD_NAMESPACE)%"
+            app: "%ENVIRONMENT(APP_CONTAINER_NAME)%"
+            instance: "%ENVIRONMENT(HOSTNAME)%"
+            version: "%ENVIRONMENT(POD_VERSION)%"
+            cluster_name: "egov-cluster"
+            log_type: "access-log"
+          text_format_source:
+            text_format: "[%START_TIME%] \"%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%\" %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% %RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)% \"%REQ(X-FORWARDED-FOR)%\" \"%REQ(USER-AGENT)%\" \"%REQ(X-REQUEST-ID)%\" \"%REQ(:AUTHORITY)%\" \"%UPSTREAM_HOST%\"\n"
+    rootNamespace: istio-system
+    trustDomain: cluster.local
+  meshNetworks: 'networks: {}'

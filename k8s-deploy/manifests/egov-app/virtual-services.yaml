@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: egov-hello
+  namespace: egov-app
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-system/istio-ingressgateway
+  http:
+  - match:
+    - uri:
+        prefix: /a/b/c/hello
+    route:
+    - destination:
+        host: egov-hello
+        port:
+          number: 80

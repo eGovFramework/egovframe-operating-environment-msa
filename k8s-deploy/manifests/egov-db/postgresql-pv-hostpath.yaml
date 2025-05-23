@@ -1,0 +1,34 @@
+# hostPath PersistentVolume (commented out)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresql-pv-hostpath
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "/Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/postgresql"
+    type: DirectoryOrCreate
+
+---
+
+# hostPath PersistentVolumeClaim (commented out)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-pvc-hostpath
+  namespace: egov-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+  volumeName: postgresql-pv-hostpath

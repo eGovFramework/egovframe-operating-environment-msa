@@ -1,0 +1,33 @@
+# NFS PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-nfs
+  labels:
+    type: nfs
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  nfs:
+    server: 192.168.64.1  # Replace with your NFS server IP
+    path: "/Users/chrisyoon/nfs-share/data/mysql"
+
+---
+# NFS PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc-nfs
+  namespace: egov-db
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: mysql-pv-nfs
+  storageClassName: standard

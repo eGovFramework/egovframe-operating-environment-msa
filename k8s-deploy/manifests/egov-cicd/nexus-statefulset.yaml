@@ -1,0 +1,162 @@
+# hostPath PersistentVolume (commented out)
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: nexus-pv-hostpath
+#   labels:
+#     type: local
+# spec:
+#   capacity:
+#     storage: 8Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: standard
+#   hostPath:
+#     path: "/Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/nexus"
+#     type: DirectoryOrCreate
+
+---
+
+# hostPath PersistentVolumeClaim (commented out)
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: nexus-pvc-hostpath
+#   namespace: egov-cicd
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 8Gi
+#   storageClassName: standard
+#   volumeName: nexus-pv-hostpath
+
+---
+
+# NFS PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nexus-pv-nfs
+  labels:
+    type: nfs
+spec:
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  nfs:
+    server: 192.168.64.1
+    path: "/Users/chrisyoon/nfs-share/data/nexus"
+
+---
+
+# NFS PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nexus-pvc-nfs
+  namespace: egov-cicd
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: nexus-pv-nfs
+  storageClassName: standard
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nexus
+  namespace: egov-cicd
+spec:
+  serviceName: nexus-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus
+  template:
+    metadata:
+      labels:
+        app: nexus
+    spec:
+      containers:
+      - name: nexus
+        image: sonatype/nexus3:3.68.1
+        ports:
+        - containerPort: 8081
+        volumeMounts:
+        - name: nexus-data
+          mountPath: /nexus-data
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /service/rest/v1/status
+            port: 8081
+          initialDelaySeconds: 240
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /service/rest/v1/status
+            port: 8081
+          initialDelaySeconds: 240
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 6
+        env:
+        - name: INSTALL4J_ADD_VM_PARAMS
+          value: "-Xms512m -Xmx2g -XX:MaxDirectMemorySize=2g -Djava.util.prefs.userRoot=/nexus-data/javaprefs"
+      volumes:
+      - name: nexus-data
+        hostPath:
+          path: /Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/nexus
+          type: DirectoryOrCreate
+      securityContext:
+        fsGroup: 200
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-headless
+  namespace: egov-cicd
+spec:
+  clusterIP: None
+  ports:
+    - port: 8081
+  selector:
+    app: nexus
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus
+  namespace: egov-cicd
+spec:
+  type: NodePort
+  ports:
+    - port: 8081
+      targetPort: 8081
+      nodePort: 30014
+  selector:
+    app: nexus
+    statefulset.kubernetes.io/pod-name: nexus-0

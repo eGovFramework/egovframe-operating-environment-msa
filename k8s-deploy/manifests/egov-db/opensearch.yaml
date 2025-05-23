@@ -1,0 +1,209 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: opensearch-certs
+  namespace: egov-db
+type: Opaque
+stringData:
+  esnode.pem: |
+    -----BEGIN CERTIFICATE-----
+    MIIDUzCCAjugAwIBAgIJAM6ZFvxW/OApMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNV
+    BAMMEGVnb3Ytb3BlbnNlYXJjaDAeFw0yNDAzMjAwMDAwMDBaFw0yNTAzMjAwMDAw
+    MDBaMBsxGTAXBgNVBAMMEGVnb3Ytb3BlbnNlYXJjaDCCASIwDQYJKoZIhvcNAQEB
+    BQADggEPADCCAQoCggEBANqS3+vz+UApa4gC9U0RXYt4Fh4yJ4YsdHM8mU4h4k1v
+    F9q9Z9ZxG4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    -----END CERTIFICATE-----
+  esnode-key.pem: |
+    -----BEGIN PRIVATE KEY-----
+    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDakv/r8/lAKWuI
+    AvVNEV2LeBYeMieGLHRzPJlOIeJNbxfavWfWcRuGeGeGeGeGeGeGeGeGeGeGeGeG
+    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
+    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
+    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
+    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
+    -----END PRIVATE KEY-----
+  root-ca.pem: |
+    -----BEGIN CERTIFICATE-----
+    MIIDUzCCAjugAwIBAgIJAM6ZFvxW/OApMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNV
+    BAMMEGVnb3Ytb3BlbnNlYXJjaDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+    ggEBANqS3+vz+UApa4gC9U0RXYt4Fh4yJ4YsdHM8mU4h4k1vF9q9Z9ZxG4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    -----END CERTIFICATE-----
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opensearch-config
+  namespace: egov-db
+data:
+  opensearch.yml: |
+    cluster.name: opensearch-cluster
+    node.name: ${HOSTNAME}
+    discovery.type: single-node
+    bootstrap.memory_lock: true
+    network.host: 0.0.0.0
+    
+    # 보안 설정 비활성화
+    plugins.security.disabled: true
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: opensearch-pv-0
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "/Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/opensearch"
+    type: DirectoryOrCreate
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: opensearch-data-0
+  namespace: egov-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+  volumeName: opensearch-pv-0
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: opensearch-secret
+  namespace: egov-db
+type: Opaque
+stringData:
+  admin-password: egovFrame123!@#  # 실제 운영환경에서는 더 안전한 방식으로 관리해야 합니다
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: opensearch
+  namespace: egov-db
+spec:
+  serviceName: opensearch-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opensearch
+  template:
+    metadata:
+      labels:
+        app: opensearch
+    spec:
+      initContainers:
+      - name: sysctl
+        image: busybox
+        command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        securityContext:
+          privileged: true
+      - name: fix-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000 /usr/share/opensearch/data"]
+        volumeMounts:
+          - name: data
+            mountPath: /usr/share/opensearch/data
+      containers:
+      - name: opensearch
+        image: opensearch-with-nori:2.15.0
+        env:
+        - name: discovery.type
+          value: single-node
+        - name: OPENSEARCH_JAVA_OPTS
+          value: "-Xms1g -Xmx1g"
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/opensearch/config/opensearch.yml
+          subPath: opensearch.yml
+        - name: certs
+          mountPath: /usr/share/opensearch/config/certificates
+        - name: data
+          mountPath: /usr/share/opensearch/data
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: transport
+      volumes:
+      - name: config
+        configMap:
+          name: opensearch-config
+      - name: certs
+        secret:
+          secretName: opensearch-certs
+      - name: data
+        persistentVolumeClaim:
+          # To use hostPath storage, uncomment this and comment out the NFS claim
+          # claimName: opensearch-pvc-hostpath
+          
+          # Using NFS storage
+          claimName: opensearch-pvc-nfs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch
+  namespace: egov-db
+spec:
+  type: NodePort
+  selector:
+    app: opensearch
+  ports:
+  - name: http
+    port: 9200
+    targetPort: 9200
+    nodePort: 30920
+  - name: performance
+    port: 9600
+    targetPort: 9600
+    nodePort: 30960
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: opensearch-headless
+  namespace: egov-db
+spec:
+  clusterIP: None
+  selector:
+    app: opensearch
+  ports:
+  - name: http
+    port: 9200
+    targetPort: 9200

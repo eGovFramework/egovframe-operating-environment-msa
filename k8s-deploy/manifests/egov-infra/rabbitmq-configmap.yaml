@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: egov-infra
+data:
+  default_user: "guest"
+  default_pass: "guest"

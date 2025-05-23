@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: egov-hello
+  namespace: egov-app
+spec:
+  host: egov-hello
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN    # 로드밸런싱 알고리즘. 기본값은 ROUND_ROBIN
+    outlierDetection:       # Circuit Breaking 설정
+      interval: 1s         # 장애 감지 주기. 매 3초마다 스캔하여 밖으로 내보낼 인스턴스를 찾는다
+      consecutive5xxErrors: 3  # 연속적으로 오류가 발생할 때 제외되는 오류 횟수. 연속적으로 5xx 에러가 3번 발생하면, 해당 인스턴스를 제외
+      baseEjectionTime: 30s  # 인스턴스가 트래픽에서 제외되는 기본 시간. 1분 동안 배제(=Circuit Open) 처리
+      maxEjectionPercent: 100 # 최대 100%까지 Pod 제외 가능

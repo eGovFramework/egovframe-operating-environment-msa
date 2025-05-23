@@ -1,0 +1,117 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+
+# Spring Boot
+*.log
+logs/
+spring.log
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# k8s-deploy
+k8s-deploy/data/mysql/
+k8s-deploy/data/opensearch/
+k8s-deploy/data/rabbitmq/
+k8s-deploy/data/jenkins/
+k8s-deploy/data/gitlab/
+k8s-deploy/data/sonarqube/
+k8s-deploy/data/nexus/
+k8s-deploy/data/postgresql/
+k8s-deploy/data/redis/
+istio-1.25.0/
+
+# Application specific
+/config-repo/
+/common-all-in-one/
+*.wallet
+*.did
+verifyConfig.json
+searchConfig.json
+# application-local.yml
+# application-dev.yml
+# application-prod.yml
+
+# OpenSearch Model Files
+EgovSearch-config/model/model.onnx
+EgovSearch-config/model/special_tokens_map.json
+EgovSearch-config/model/tokenizer.json
+EgovSearch-config/model/tokenizer_config.json
+EgovSearch-config/model/vocab.txt
+EgovSearch-config/cacerts/*
+
+# OpenSearch
+/example/*.txt
+/model/
+
+# egovframe-common-components-msa-krds 
+common-components-msa-temp/
+ConfigServer/
+EgovAuthor/
+EgovBoard/
+EgovCmmnCode/
+EgovLogin/
+EgovMain/
+EgovMobileId/
+EgovQuestionnaire/
+EgovSearch-Config/
+EgovSearch/
+EurekaServer/
+GatewayServer/
+
+# Build and Deploy
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Node (if using Node.js for frontend)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Test
+*.test
+test-output/
+/test-results/
+
+# Misc
+*.class
+*.log
+hs_err_pid*
+

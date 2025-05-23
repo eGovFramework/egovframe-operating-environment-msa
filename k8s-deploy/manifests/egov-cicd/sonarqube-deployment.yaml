@@ -1,0 +1,118 @@
+# hostPath PersistentVolume (commented out)
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: sonarqube-pv-hostpath
+#   labels:
+#     type: local
+# spec:
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: standard
+#   hostPath:
+#     path: "/Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/sonarqube"
+#     type: DirectoryOrCreate
+
+---
+
+# hostPath PersistentVolumeClaim (commented out)
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: sonarqube-pvc-hostpath
+#   namespace: egov-cicd
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 5Gi
+#   storageClassName: standard
+#   volumeName: sonarqube-pv-hostpath
+
+---
+
+# NFS PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sonarqube-pv-nfs
+  labels:
+    type: nfs
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  nfs:
+    server: 192.168.64.1
+    path: "/Users/chrisyoon/nfs-share/data/sonarqube"
+
+---
+
+# NFS PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarqube-pvc-nfs
+  namespace: egov-cicd
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  volumeName: sonarqube-pv-nfs
+  storageClassName: standard
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarqube
+  namespace: egov-cicd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube
+  template:
+    metadata:
+      labels:
+        app: sonarqube
+    spec:
+      containers:
+      - name: sonarqube
+        image: sonarqube:9.9-community
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: sonarqube-data
+          mountPath: /opt/sonarqube/data
+      volumes:
+      - name: sonarqube-data
+        hostPath:
+          path: /Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/sonarqube
+          type: DirectoryOrCreate
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarqube
+  namespace: egov-cicd
+spec:
+  type: NodePort
+  ports:
+    - port: 9000
+      targetPort: 9000
+      nodePort: 30013
+  selector:
+    app: sonarqube

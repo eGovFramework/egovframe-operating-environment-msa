@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egov-main
+  namespace: egov-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: egov-main
+  template:
+    metadata:
+      labels:
+        app: egov-main
+    spec:
+      containers:
+      - name: egov-main
+        image: egovmain:k8s
+        ports:
+        - containerPort: 80
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "k8s"
+        - name: SPRING_CLOUD_CONFIG_ENABLED
+          value: "false"
+        - name: SPRING_CLOUD_DISCOVERY_ENABLED
+          value: "false"
+        - name: EUREKA_CLIENT_ENABLED
+          value: "false"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq.egov-infra.svc.cluster.local"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "guest"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "guest"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 80
+          initialDelaySeconds: 120
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 80
+          initialDelaySeconds: 120
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 5
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: egov-main
+  namespace: egov-app
+spec:
+  selector:
+    app: egov-main
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

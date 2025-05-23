@@ -1,0 +1,304 @@
+name: ${NETWORK_NAME}
+
+networks:
+  default:
+    name: ${NETWORK_NAME}
+    external: true
+  opensearch-net:
+    driver: bridge
+
+volumes:
+  opensearch-data1:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${OPENSEARCH_DATA_PATH}
+      o: bind
+  rabbitmq_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${RABBITMQ_DATA_PATH}
+      o: bind
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MYSQL_DATA_PATH}
+      o: bind
+
+services:
+  opensearch:
+    image: opensearch-with-nori:2.15.0
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data
+    ports:
+      - "${OPENSEARCH_PORT}:${OPENSEARCH_PORT}"
+      - "${OPENSEARCH_PERFORMANCE_ANALYZER_PORT}:${OPENSEARCH_PERFORMANCE_ANALYZER_PORT}"
+    networks:
+      - opensearch-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -k -u admin:${OPENSEARCH_INITIAL_ADMIN_PASSWORD} -f https://localhost:${OPENSEARCH_PORT}/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.15.0
+    container_name: opensearch-dashboards
+    ports:
+      - "${OPENSEARCH_DASHBOARDS_PORT}:${OPENSEARCH_DASHBOARDS_PORT}"
+    expose:
+      - '5601'
+    environment:
+      - OPENSEARCH_HOSTS=["https://opensearch:${OPENSEARCH_PORT}"]
+    networks:
+      - opensearch-net
+
+  config-server:
+    image: configserver:${IMAGE_TAG}
+    container_name: config-server
+    ports:
+      - "${CONFIG_SERVER_PORT}:${CONFIG_SERVER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${CONFIG_SERVER_PROFILE}
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:${CONFIG_REPO_PATH}
+      - SPRING_RABBITMQ_HOST=bbs_rabbitmq
+      - SPRING_RABBITMQ_PORT=${RABBITMQ_PORT}
+      - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USER}
+      - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    volumes:
+      - ${CONFIG_LOCAL_PATH}:${CONFIG_REPO_PATH}:ro
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      bbs_rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${CONFIG_SERVER_PORT}/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  eureka-server:
+    image: eurekaserver:${IMAGE_TAG}
+    container_name: eureka-server
+    ports:
+      - "${EUREKA_SERVER_PORT}:${EUREKA_SERVER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      # Eureka 설정
+      - EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE=http://eureka-server:${EUREKA_SERVER_PORT}/eureka/
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${EUREKA_SERVER_PORT}/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  gateway-server:
+    image: gatewayserver:${IMAGE_TAG}
+    container_name: gateway-server
+    ports:
+      - "${GATEWAY_SERVER_PORT}:${GATEWAY_SERVER_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+  egov-author:
+    image: egovauthor:${IMAGE_TAG}
+    container_name: egov-author
+    ports:
+      - "${EGOV_AUTHOR_PORT}:${EGOV_AUTHOR_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
+
+  egov-board:
+    image: egovboard:${IMAGE_TAG}
+    container_name: egov-board
+    ports:
+      - "${EGOV_BOARD_PORT}:${EGOV_BOARD_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
+
+  mysql-com:
+    image: mysql:8.0-oracle
+    #platform: linux/arm64/v8
+    platform: linux/amd64
+    container_name: mysql-com
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --lower_case_table_names=1
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  egov-cmmncode:
+    image: egovcmmncode:${IMAGE_TAG}
+    container_name: egov-cmmncode
+    ports:
+      - "${EGOV_CMMNCODE_PORT}:${EGOV_CMMNCODE_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
+
+  egov-login:
+    image: egovlogin:${IMAGE_TAG}
+    container_name: egov-login
+    ports:
+      - "${EGOV_LOGIN_PORT}:${EGOV_LOGIN_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
+
+  egov-main:
+    image: egovmain:${IMAGE_TAG}
+    container_name: egov-main
+    ports:
+      - "${EGOV_MAIN_PORT}:${EGOV_MAIN_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
+
+#  egov-mobileid:
+#    image: egovmobileid:${IMAGE_TAG}
+#    container_name: egov-mobileid
+#    ports:
+#      - "${EGOV_MOBILEID_PORT}:${EGOV_MOBILEID_PORT}"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+#      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+#      - APP_VERIFY_FILE_PATH=/app/config/verifyConfig-docker.json
+#    volumes:
+#      - ${EGOVMOBILEID_CONFIG_PATH}:/app/config:ro
+#    depends_on:
+#      gateway-server:
+#        condition: service_started
+
+  egov-questionnaire:
+    image: egovquestionnaire:${IMAGE_TAG}
+    container_name: egov-questionnaire
+    ports:
+      - "${EGOV_QUESTIONNAIRE_PORT}:${EGOV_QUESTIONNAIRE_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      - gateway-server
+
+  egov-search:
+    image: egovsearch:${IMAGE_TAG}
+    container_name: egov-search
+    ports:
+      - "${EGOV_SEARCH_PORT}:${EGOV_SEARCH_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+      - APP_SEARCH_CONFIG_PATH=/app/config/searchConfig-docker.json
+      - OPENSEARCH_KEYSTORE_PATH=/opt/java/openjdk/lib/security/cacerts
+      - OPENSEARCH_KEYSTORE_PASSWORD=changeit
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-com:3306/${MYSQL_DATABASE}
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      - OPENSEARCH_PROTOCOL=https
+      - OPENSEARCH_URL=opensearch
+      - OPENSEARCH_PORT=9200
+      - OPENSEARCH_USERNAME=admin
+      - OPENSEARCH_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD:-egovFrame123!@#}
+      - LOGGING_LEVEL_EGOVFRAMEWORK_COM_EXT_OPS=DEBUG
+      - LOGGING_LEVEL_ORG_OPENSEARCH=DEBUG
+    volumes:
+      - ${EGOVSEARCH_CONFIG_PATH}:/app/config:ro
+      - ${EGOVSEARCH_MODEL_PATH}:/app/model
+      - ${EGOVSEARCH_CACERTS_PATH}:/app/cacerts:ro
+      - ${EGOVSEARCH_EXAMPLE_PATH}:/app/example
+    networks:
+      - default
+      - opensearch-net  # OpenSearch와 같은 네트워크에 있어야 함
+    depends_on:
+      opensearch:
+        condition: service_healthy
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
+
+  bbs_rabbitmq:
+    image: rabbitmq:3-management
+    container_name: bbs_rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5

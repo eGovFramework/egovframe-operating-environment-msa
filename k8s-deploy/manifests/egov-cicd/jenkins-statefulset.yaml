@@ -1,0 +1,200 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-sa
+  namespace: egov-cicd
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: jenkins-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create","delete","get","list","patch","update","watch"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get","list","watch"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: jenkins-cluster-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: jenkins-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: jenkins-sa
+  namespace: egov-cicd
+
+---
+
+# hostPath PersistentVolume (commented out)
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: jenkins-pv-hostpath
+#   labels:
+#     type: local
+# spec:
+#   capacity:
+#     storage: 10Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: standard
+#   hostPath:
+#     path: "/Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/jenkins"
+#     type: DirectoryOrCreate
+
+---
+
+# hostPath PersistentVolumeClaim (commented out)
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: jenkins-pvc-hostpath
+#   namespace: egov-cicd
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi
+#   storageClassName: standard
+#   volumeName: jenkins-pv-hostpath
+
+---
+
+# NFS PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jenkins-pv-nfs
+  labels:
+    type: nfs
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  nfs:
+    server: 192.168.64.1
+    path: "/Users/chrisyoon/nfs-share/data/jenkins"
+
+---
+
+# NFS PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc-nfs
+  namespace: egov-cicd
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: jenkins-pv-nfs
+  storageClassName: standard
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jenkins
+  namespace: egov-cicd
+spec:
+  serviceName: jenkins-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccountName: jenkins-sa
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        ports:
+        - containerPort: 8080
+          name: web
+        - containerPort: 50000
+          name: agent
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+      volumes:
+      - name: jenkins-home
+        hostPath:
+          path: /Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/jenkins
+          type: DirectoryOrCreate
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-headless
+  namespace: egov-cicd
+spec:
+  clusterIP: None
+  ports:
+  - port: 8080
+  selector:
+    app: jenkins
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+  namespace: egov-cicd
+  labels:
+    app: jenkins
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30011  # Jenkins Web UI용 포트
+    - name: agent
+      port: 50000
+      targetPort: 50000
+      nodePort: 30010  # Jenkins Agent 연결용 포트
+  selector:
+    app: jenkins
+    statefulset.kubernetes.io/pod-name: jenkins-0

@@ -1,0 +1,26 @@
+name: ${NETWORK_NAME}
+
+# 최상위 레벨에서 모든 네트워크 정의
+networks:
+  default:
+    name: ${NETWORK_NAME}
+    external: true
+
+services:
+  egov-board-2:
+    image: egovboard:${IMAGE_TAG}
+    container_name: egov-board-2
+    ports:
+      - "${EGOV_BOARD_PORT_2:-8092}:${EGOV_BOARD_PORT:-8082}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+
+  egov-board-3:
+    image: egovboard:${IMAGE_TAG}
+    container_name: egov-board-3
+    ports:
+      - "${EGOV_BOARD_PORT_3:-8093}:${EGOV_BOARD_PORT:-8082}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}

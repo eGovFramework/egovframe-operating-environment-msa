@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: egov-monitoring
+data:
+  circuit-breaker-alerts.yaml: |
+    groups:
+    - name: CircuitBreakerAlerts
+      rules:
+      - alert: CircuitBreakerOpen
+        expr: |
+          sum(increase(istio_requests_total{
+            response_code=~"5.*",
+            destination_service="egov-hello.egov-app.svc.cluster.local"
+          }[5m])) by (destination_service) > 3
+        for: 10s
+        labels:
+          severity: critical
+          service: egov-hello
+        annotations:
+          summary: "Circuit Breaker Opened for egov-hello"
+          description: "Circuit Breaker가 Open 되었습니다. 3회 이상의 연속 오류가 발생했습니다."

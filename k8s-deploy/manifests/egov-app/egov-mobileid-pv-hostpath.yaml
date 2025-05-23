@@ -1,0 +1,32 @@
+# hostPath PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: egov-mobileid-pv-hostpath
+  namespace: egov-app
+spec:
+  capacity:
+    storage: 10Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  hostPath:
+    path: "${MOBILEID_CONFIG_PATH}"
+    type: DirectoryOrCreate
+---
+# hostPath PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-mobileid-pvc-hostpath
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+  storageClassName: standard
+  volumeName: egov-mobileid-pv-hostpath
+
