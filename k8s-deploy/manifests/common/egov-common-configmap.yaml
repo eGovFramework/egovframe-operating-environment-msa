@@ -26,11 +26,6 @@ data:
   TOKEN_ACCESS_EXPIRATION: "1200000"
   TOKEN_REFRESH_EXPIRATION: "3600000"
   
-  # Roles
-  #ROLES_ROLE_ADMIN: "/uat/uap/**, /sec/ram/**, /sec/rgm/**, /sec/gmt/**, /sec/rmt/**, /cop/tpl/**, /uss/olp/qmc/**, /uss/olp/qtm/**, /uss/olp/qqm/**, /uss/olp/qim/**, /sym/ccm/cca/**, /sym/ccm/ccc/**, /sym/ccm/cde/**, /ext/ops/**, /a/b/c/**"
-  ROLES_ROLE_ADMIN: "/uat/uap/**, /sec/ram/**, /sec/rgm/**, /sec/gmt/**, /sec/rmt/**, /cop/tpl/**, /uss/olp/qmc/**, /uss/olp/qtm/**, /uss/olp/qqm/**, /uss/olp/qim/**, /sym/ccm/cca/**, /sym/ccm/ccc/**, /sym/ccm/cde/**, /ext/ops/**, /a/b/c/**, /cop/bls/**, /cop/bbs/**, /cop/cmy/**, /cop/brd/**, /mip/**, /uss/olp/qri/**, /uss/olp/qrm/**, /a/b/c/**"
-  ROLES_ROLE_USER: "/cop/bls/**, /cop/bbs/**, /cop/cmy/**, /cop/brd/**, /mip/**, /uss/olp/qri/**, /uss/olp/qrm/**, /a/b/c/**"
-
   # MySQL Character Set
   MYSQL_CHARACTER_SET: "utf8mb4"
   MYSQL_COLLATION: "utf8mb4_unicode_ci"
