@@ -78,18 +78,18 @@ EgovSearch-config/cacerts/*
 
 # egovframe-common-components-msa-krds 
 common-components-msa-temp/
-ConfigServer/
-EgovAuthor/
-EgovBoard/
-EgovCmmnCode/
-EgovLogin/
-EgovMain/
-EgovMobileId/
-EgovQuestionnaire/
-EgovSearch-Config/
-EgovSearch/
-EurekaServer/
-GatewayServer/
+/ConfigServer/
+/EgovAuthor/
+/EgovBoard/
+/EgovCmmnCode/
+/EgovLogin/
+/EgovMain/
+/EgovMobileId/
+/EgovQuestionnaire/
+/EgovSearch-Config/
+/EgovSearch/
+/EurekaServer/
+/GatewayServer/
 
 # Build and Deploy
 *.jar

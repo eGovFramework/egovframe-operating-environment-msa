@@ -1,0 +1,22 @@
+FROM openjdk:8-jre-slim
+WORKDIR /app
+
+RUN apt-get update && \
+    apt-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY target/*.jar /app/app.jar
+
+ENV SERVER_PORT=80 \
+    SPRING_APPLICATION_NAME=EgovBoard \
+    SPRING_PROFILES_ACTIVE=k8s \
+    SPRING_CLOUD_CONFIG_ENABLED=false \
+    SPRING_CLOUD_DISCOVERY_ENABLED=false \
+    EUREKA_CLIENT_ENABLED=false
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:80/actuator/health || exit 1
+
+EXPOSE 80
+
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]

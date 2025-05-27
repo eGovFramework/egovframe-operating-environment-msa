@@ -1,0 +1,25 @@
+FROM eclipse-temurin:17-jre-jammy
+WORKDIR /app
+
+RUN apt-get update && \
+    apt-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY target/*.jar /app/app.jar
+
+# 시작 스크립트 생성
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'cp /app/cacerts/* /opt/java/openjdk/lib/security/' >> /app/start.sh && \
+    echo 'exec java -jar /app/app.jar' >> /app/start.sh && \
+    chmod +x /app/start.sh
+
+ENV SPRING_APPLICATION_NAME=EgovSearch \
+    SPRING_PROFILES_ACTIVE=docker \
+    SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:9992/actuator/health || exit 1
+
+EXPOSE 9992
+
+ENTRYPOINT ["/app/start.sh"]
