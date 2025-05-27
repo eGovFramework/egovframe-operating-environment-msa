@@ -102,7 +102,7 @@ spec:
             mountPath: /usr/share/opensearch/data
       containers:
       - name: opensearch
-        image: opensearch-with-nori:2.15.0
+        image: egovframe/opensearch-with-nori:2.15.0
         env:
         - name: discovery.type
           value: single-node
