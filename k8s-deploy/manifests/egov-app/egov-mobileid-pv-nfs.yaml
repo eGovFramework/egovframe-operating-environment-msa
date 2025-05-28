@@ -1,0 +1,14 @@
+# NFS PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-mobileid-pvc-nfs
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Mi
+  volumeName: egov-mobileid-pv-nfs
+  storageClassName: nfs
