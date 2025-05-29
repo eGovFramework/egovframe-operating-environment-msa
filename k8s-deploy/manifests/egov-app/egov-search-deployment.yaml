@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: egov-search
-        image: egovsearch:k8s
+        image: egovframe/egovsearch:4.3.0.k8s
         ports:
         - containerPort: 80
         envFrom:

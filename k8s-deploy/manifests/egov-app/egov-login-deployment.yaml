@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: egov-login
-        image: egovlogin:k8s
+        image: egovframe/egovlogin:4.3.0.k8s
         ports:
         - containerPort: 80
         envFrom:

@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: egov-cmmncode
-        image: egovcmmncode:k8s
+        image: egovframe/egovcmmncode:4.3.0.k8s
         ports:
         - containerPort: 80
           name: http

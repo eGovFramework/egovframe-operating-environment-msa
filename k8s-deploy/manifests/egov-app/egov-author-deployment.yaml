@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: egov-author
-        image: egovauthor:k8s
+        image: egovframe/egovauthor:4.3.0.k8s
         ports:
         - containerPort: 80
         envFrom:
