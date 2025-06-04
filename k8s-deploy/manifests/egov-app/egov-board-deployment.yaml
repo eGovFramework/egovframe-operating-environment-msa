@@ -16,6 +16,7 @@ spec:
       containers:
       - name: egov-board
         image: egovframe/egovboard:4.3.0.k8s
+        imagePullPolicy: Always #IfNotPresent : Downloads the image only if it does not exist on the node
         ports:
         - containerPort: 80
         envFrom:

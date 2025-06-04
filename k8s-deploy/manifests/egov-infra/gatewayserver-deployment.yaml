@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: gateway-server
-        image: gatewayserver:k8s
-        imagePullPolicy: Never
+        image: egovframe/gatewayserver:4.3.0.k8s
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
@@ -93,5 +93,6 @@ spec:
   ports:
   - port: 9000
     targetPort: 80
+    nodePort: 30090
   selector:
     app: gateway-server

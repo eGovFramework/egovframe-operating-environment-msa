@@ -16,8 +16,10 @@ spec:
       containers:
       - name: egov-login
         image: egovframe/egovlogin:4.3.0.k8s
+        imagePullPolicy: Always #IfNotPresent : Downloads the image only if it does not exist on the node
         ports:
         - containerPort: 80
+          name: http
         envFrom:
         - configMapRef:
             name: egov-common-config
@@ -28,8 +30,6 @@ spec:
           value: "k8s"
         - name: SERVER_PORT
           value: "80"
-        - name: SPRING_CLOUD_CONFIG_ENABLED
-          value: "false"
         - name: SPRING_CLOUD_DISCOVERY_ENABLED
           value: "false"
         - name: EUREKA_CLIENT_ENABLED

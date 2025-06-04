@@ -4,8 +4,8 @@ metadata:
   name: egov-common-config
 data:
   # Database
-  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "com.mysql.cj.jdbc.Driver"
-  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-0.mysql-headless.egov-db.svc.cluster.local:3306/com"
+  DATASOURCE_DRIVER_CLASS_NAME: "com.mysql.cj.jdbc.Driver"
+  DATASOURCE_URL: "jdbc:mysql://mysql-0.mysql-headless.egov-db.svc.cluster.local:3306/com"
   
   # HikariCP
   SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "20"
@@ -34,3 +34,5 @@ data:
   # Security Role
   ROLES_ROLE_ADMIN: ROLE_ADMIN
   ROLES_ROLE_USER: ROLE_USER
+
+  APIGATEWAY_ALLOWED_ORIGIN: http://192.168.100.64:9000

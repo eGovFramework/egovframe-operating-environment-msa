@@ -8,9 +8,9 @@ data:
   # echo -n 'root' | base64
   MYSQL_ROOT_PASSWORD: cm9vdA==
   # echo -n 'com' | base64
-  SPRING_DATASOURCE_USERNAME: Y29t
+  DATASOURCE_USERNAME: Y29t
   # echo -n 'com01' | base64
-  SPRING_DATASOURCE_PASSWORD: Y29tMDE=
+  DATASOURCE_PASSWORD: Y29tMDE=
   # echo -n 'com' | base64
   MYSQL_DATABASE: Y29t
 
@@ -62,12 +62,12 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mysql-secret
-              key: SPRING_DATASOURCE_USERNAME
+              key: DATASOURCE_USERNAME
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
               name: mysql-secret
-              key: SPRING_DATASOURCE_PASSWORD
+              key: DATASOURCE_PASSWORD
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
