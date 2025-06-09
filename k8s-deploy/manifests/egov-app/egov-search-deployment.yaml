@@ -37,9 +37,9 @@ spec:
         - name: APP_SEARCH_CONFIG_PATH
           value: "/app/config/searchConfig-docker.json"
         - name: OPENSEARCH_KEYSTORE_PATH
-          value: "/app/cacerts/cacerts"
+          value: "/app/cacerts/cacerts.opensearch"
         - name: OPENSEARCH_KEYSTORE_PASSWORD
-          value: "changeit"
+          value: "egov1234!"
         - name: OPENSEARCH_PROTOCOL
           value: "http"  # https에서 http로 변경
         - name: OPENSEARCH_URL
@@ -63,16 +63,20 @@ spec:
         - name: APP_OPENAPI_SERVER_URL
           value: "http://localhost:30992"
         volumeMounts:
-        - name: search-config
+        - name: search-config-shared
           mountPath: /app/config
+          subPath: config
           readOnly: true
-        - name: search-model
+        - name: search-config-shared
           mountPath: /app/model
-        - name: search-cacerts
+          subPath: model
+        - name: search-config-shared
           mountPath: /app/cacerts
+          subPath: cacerts
           readOnly: true
-        - name: search-example
+        - name: search-config-shared
           mountPath: /app/example
+          subPath: example
         livenessProbe:
           httpGet:
             path: /actuator/health
@@ -88,18 +92,9 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 3
       volumes:
-      - name: search-config
+      - name: search-config-shared
         persistentVolumeClaim:
           claimName: egov-search-config-pvc-nfs
-      - name: search-model
-        persistentVolumeClaim:
-          claimName: egov-search-model-pvc-nfs
-      - name: search-cacerts
-        persistentVolumeClaim:
-          claimName: egov-search-cacerts-pvc-nfs
-      - name: search-example
-        persistentVolumeClaim:
-          claimName: egov-search-example-pvc-nfs
 ---
 apiVersion: v1
 kind: Service
