@@ -20,6 +20,7 @@ spec:
       containers:
       - name: egov-cmmncode
         image: egovframe/egovcmmncode:4.3.0.k8s
+        imagePullPolicy: Always #IfNotPresent : Downloads the image only if it does not exist on the node
         ports:
         - containerPort: 80
           name: http
