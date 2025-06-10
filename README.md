@@ -1,5 +1,4 @@
-# 로컬 개발 환경 구축
-
+# Istio 및 OpenTelemetry 운영환경 가이드
 ## 표준프레임워크 MSA 공통컴포넌트 가져오기
 
 ### 레포지토리에서 가져오기
@@ -7,6 +6,18 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
 ```
 ./import_msa_project.sh # 모든 표준프레임워크 MSA 공통컴포넌트 프로젝트를 클론하여 가져온다.
 ```
+
+## 1. Istio 소개
+
+## 2. OpenTelemetry 소개
+
+## 3. Docker 기반 배포 및 가이드
+
+## 4. Kubernetes 기반 배포 및 가이드
+
+
+
+# 로컬 개발 환경 구축
 
 ## 빌드 전 설정
 
