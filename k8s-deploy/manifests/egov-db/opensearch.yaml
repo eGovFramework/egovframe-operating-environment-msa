@@ -7,38 +7,89 @@ type: Opaque
 stringData:
   esnode.pem: |
     -----BEGIN CERTIFICATE-----
-    MIIDUzCCAjugAwIBAgIJAM6ZFvxW/OApMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNV
-    BAMMEGVnb3Ytb3BlbnNlYXJjaDAeFw0yNDAzMjAwMDAwMDBaFw0yNTAzMjAwMDAw
-    MDBaMBsxGTAXBgNVBAMMEGVnb3Ytb3BlbnNlYXJjaDCCASIwDQYJKoZIhvcNAQEB
-    BQADggEPADCCAQoCggEBANqS3+vz+UApa4gC9U0RXYt4Fh4yJ4YsdHM8mU4h4k1v
-    F9q9Z9ZxG4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    MIIEPDCCAySgAwIBAgIUaYSlET3nzsotWTrWueVPPh10yLYwDQYJKoZIhvcNAQEL
+    BQAwgY8xEzARBgoJkiaJk/IsZAEZFgNjb20xFzAVBgoJkiaJk/IsZAEZFgdleGFt
+    cGxlMRkwFwYDVQQKDBBFeGFtcGxlIENvbSBJbmMuMSEwHwYDVQQLDBhFeGFtcGxl
+    IENvbSBJbmMuIFJvb3QgQ0ExITAfBgNVBAMMGEV4YW1wbGUgQ29tIEluYy4gUm9v
+    dCBDQTAeFw0yNDAyMjAxNzAzMjVaFw0zNDAyMTcxNzAzMjVaMFcxCzAJBgNVBAYT
+    AmRlMQ0wCwYDVQQHDAR0ZXN0MQ0wCwYDVQQKDARub2RlMQ0wCwYDVQQLDARub2Rl
+    MRswGQYDVQQDDBJub2RlLTAuZXhhbXBsZS5jb20wggEiMA0GCSqGSIb3DQEBAQUA
+    A4IBDwAwggEKAoIBAQCm93kXteDQHMAvbUPNPW5pyRHKDD42XGWSgq0k1D29C/Ud
+    yL21HLzTJa49ZU2ldIkSKs9JqbkHdyK0o8MO6L8dotLoYbxDWbJFW8bp1w6tDTU0
+    HGkn47XVu3EwbfrTENg3jFu+Oem6a/501SzITzJWtS0cn2dIFOBimTVpT/4Zv5qr
+    XA6Cp4biOmoTYWhi/qQl8d0IaADiqoZ1MvZbZ6x76qTrRAbg+UWkpTEXoH1xTc8n
+    dibR7+HP6OTqCKvo1NhE8uP4pY+fWd6b6l+KLo3IKpfTbAIJXIO+M67FLtWKtttD
+    ao94B069skzKk6FPgW/OZh6PRCD0oxOavV+ld2SjAgMBAAGjgcYwgcMwRwYDVR0R
+    BEAwPogFKgMEBQWCEm5vZGUtMC5leGFtcGxlLmNvbYIJbG9jYWxob3N0hxAAAAAA
+    AAAAAAAAAAAAAAABhwR/AAABMAsGA1UdDwQEAwIF4DAdBgNVHSUEFjAUBggrBgEF
+    BQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQU0/qDQaY10jIo
+    wCjLUpz/HfQXyt8wHwYDVR0jBBgwFoAUF4ffoFrrZhKn1dD4uhJFPLcrAJwwDQYJ
+    KoZIhvcNAQELBQADggEBAGbij5WyF0dKhQodQfTiFDb73ygU6IyeJkFSnxF67gDz
+    pQJZKFvXuVBa3cGP5e7Qp3TK50N+blXGH0xXeIV9lXeYUk4hVfBlp9LclZGX8tGi
+    7Xa2enMvIt5q/Yg3Hh755ZxnDYxCoGkNOXUmnMusKstE0YzvZ5Gv6fcRKFBUgZLh
+    hUBqIEAYly1EqH/y45APiRt3Nor1yF6zEI4TnL0yNrHw6LyQkUNCHIGMJLfnJQ9L
+    camMGIXOx60kXNMTigF9oXXwixWAnDM9y3QT8QXA7hej/4zkbO+vIeV/7lGUdkyg
+    PAi92EvyxmsliEMyMR0VINl8emyobvfwa7oMeWMR+hg=
     -----END CERTIFICATE-----
+
   esnode-key.pem: |
     -----BEGIN PRIVATE KEY-----
-    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDakv/r8/lAKWuI
-    AvVNEV2LeBYeMieGLHRzPJlOIeJNbxfavWfWcRuGeGeGeGeGeGeGeGeGeGeGeGeG
-    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
-    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
-    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
-    eGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeGeG
+    MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCm93kXteDQHMAv
+    bUPNPW5pyRHKDD42XGWSgq0k1D29C/UdyL21HLzTJa49ZU2ldIkSKs9JqbkHdyK0
+    o8MO6L8dotLoYbxDWbJFW8bp1w6tDTU0HGkn47XVu3EwbfrTENg3jFu+Oem6a/50
+    1SzITzJWtS0cn2dIFOBimTVpT/4Zv5qrXA6Cp4biOmoTYWhi/qQl8d0IaADiqoZ1
+    MvZbZ6x76qTrRAbg+UWkpTEXoH1xTc8ndibR7+HP6OTqCKvo1NhE8uP4pY+fWd6b
+    6l+KLo3IKpfTbAIJXIO+M67FLtWKtttDao94B069skzKk6FPgW/OZh6PRCD0oxOa
+    vV+ld2SjAgMBAAECggEAQK1+uAOZeaSZggW2jQut+MaN4JHLi61RH2cFgU3COLgo
+    FIiNjFn8f2KKU3gpkt1It8PjlmprpYut4wHI7r6UQfuv7ZrmncRiPWHm9PB82+ZQ
+    5MXYqj4YUxoQJ62Cyz4sM6BobZDrjG6HHGTzuwiKvHHkbsEE9jQ4E5m7yfbVvM0O
+    zvwrSOM1tkZihKSTpR0j2+taji914tjBssbn12TMZQL5ItGnhR3luY8mEwT9MNkZ
+    xg0VcREoAH+pu9FE0vPUgLVzhJ3be7qZTTSRqv08bmW+y1plu80GbppePcgYhEow
+    dlW4l6XPJaHVSn1lSFHE6QAx6sqiAnBz0NoTPIaLyQKBgQDZqDOlhCRciMRicSXn
+    7yid9rhEmdMkySJHTVFOidFWwlBcp0fGxxn8UNSBcXdSy7GLlUtH41W9PWl8tp9U
+    hQiiXORxOJ7ZcB80uNKXF01hpPj2DpFPWyHFxpDkWiTAYpZl68rOlYujxZUjJIej
+    VvcykBC2BlEOG9uZv2kxcqLyJwKBgQDEYULTxaTuLIa17wU3nAhaainKB3vHxw9B
+    Ksy5p3ND43UNEKkQm7K/WENx0q47TA1mKD9i+BhaLod98mu0YZ+BCUNgWKcBHK8c
+    uXpauvM/pLhFLXZ2jvEJVpFY3J79FSRK8bwE9RgKfVKMMgEk4zOyZowS8WScOqiy
+    hnQn1vKTJQKBgElhYuAnl9a2qXcC7KOwRsJS3rcKIVxijzL4xzOyVShp5IwIPbOv
+    hnxBiBOH/JGmaNpFYBcBdvORE9JfA4KMQ2fx53agfzWRjoPI1/7mdUk5RFI4gRb/
+    A3jZRBoopgFSe6ArCbnyQxzYzToG48/Wzwp19ZxYrtUR4UyJct6f5n27AoGBAJDh
+    KIpQQDOvCdtjcbfrF4aM2DPCfaGPzENJriwxy6oEPzDaX8Bu/dqI5Ykt43i/zQrX
+    GpyLaHvv4+oZVTiI5UIvcVO9U8hQPyiz9f7F+fu0LHZs6f7hyhYXlbe3XFxeop3f
+    5dTKdWgXuTTRF2L9dABkA2deS9mutRKwezWBMQk5AoGBALPtX0FrT1zIosibmlud
+    tu49A/0KZu4PBjrFMYTSEWGNJez3Fb2VsJwylVl6HivwbP61FhlYfyksCzQQFU71
+    +x7Nmybp7PmpEBECr3deoZKQ/acNHn0iwb0It+YqV5+TquQebqgwK6WCLsMuiYKT
+    bg/ch9Rhxbq22yrVgWHh6epp
     -----END PRIVATE KEY-----
+
   root-ca.pem: |
     -----BEGIN CERTIFICATE-----
-    MIIDUzCCAjugAwIBAgIJAM6ZFvxW/OApMA0GCSqGSIb3DQEBCwUAMBsxGTAXBgNV
-    BAMMEGVnb3Ytb3BlbnNlYXJjaDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-    ggEBANqS3+vz+UApa4gC9U0RXYt4Fh4yJ4YsdHM8mU4h4k1vF9q9Z9ZxG4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
-    Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4Z4
+    MIIExjCCA66gAwIBAgIUDWQJmWZ9xBTsQUeOt9F5YSPpqOIwDQYJKoZIhvcNAQEL
+    BQAwgY8xEzARBgoJkiaJk/IsZAEZFgNjb20xFzAVBgoJkiaJk/IsZAEZFgdleGFt
+    cGxlMRkwFwYDVQQKDBBFeGFtcGxlIENvbSBJbmMuMSEwHwYDVQQLDBhFeGFtcGxl
+    IENvbSBJbmMuIFJvb3QgQ0ExITAfBgNVBAMMGEV4YW1wbGUgQ29tIEluYy4gUm9v
+    dCBDQTAeFw0yNDAyMjAxNzAwMzZaFw0zNDAyMTcxNzAwMzZaMIGPMRMwEQYKCZIm
+    iZPyLGQBGRYDY29tMRcwFQYKCZImiZPyLGQBGRYHZXhhbXBsZTEZMBcGA1UECgwQ
+    RXhhbXBsZSBDb20gSW5jLjEhMB8GA1UECwwYRXhhbXBsZSBDb20gSW5jLiBSb290
+    IENBMSEwHwYDVQQDDBhFeGFtcGxlIENvbSBJbmMuIFJvb3QgQ0EwggEiMA0GCSqG
+    SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDEPyN7J9VGPyJcQmCBl5TGwfSzvVdWwoQU
+    j9aEsdfFJ6pBCDQSsj8Lv4RqL0dZra7h7SpZLLX/YZcnjikrYC+rP5OwsI9xEE/4
+    U98CsTBPhIMgqFK6SzNE5494BsAk4cL72dOOc8tX19oDS/PvBULbNkthQ0aAF1dg
+    vbrHvu7hq7LisB5ZRGHVE1k/AbCs2PaaKkn2jCw/b+U0Ml9qPuuEgz2mAqJDGYoA
+    WSR4YXrOcrmPuRqbws464YZbJW898/0Pn/U300ed+4YHiNYLLJp51AMkR4YEw969
+    VRPbWIvLrd0PQBooC/eLrL6rvud/GpYhdQEUx8qcNCKd4bz3OaQ5AgMBAAGjggEW
+    MIIBEjAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBhjAdBgNVHQ4EFgQU
+    F4ffoFrrZhKn1dD4uhJFPLcrAJwwgc8GA1UdIwSBxzCBxIAUF4ffoFrrZhKn1dD4
+    uhJFPLcrAJyhgZWkgZIwgY8xEzARBgoJkiaJk/IsZAEZFgNjb20xFzAVBgoJkiaJ
+    k/IsZAEZFgdleGFtcGxlMRkwFwYDVQQKDBBFeGFtcGxlIENvbSBJbmMuMSEwHwYD
+    VQQLDBhFeGFtcGxlIENvbSBJbmMuIFJvb3QgQ0ExITAfBgNVBAMMGEV4YW1wbGUg
+    Q29tIEluYy4gUm9vdCBDQYIUDWQJmWZ9xBTsQUeOt9F5YSPpqOIwDQYJKoZIhvcN
+    AQELBQADggEBAL3Q3AHUhMiLUy6OlLSt8wX9I2oNGDKbBu0atpUNDztk/0s3YLQC
+    YuXgN4KrIcMXQIuAXCx407c+pIlT/T1FNn+VQXwi56PYzxQKtlpoKUL3oPQE1d0V
+    6EoiNk+6UodvyZqpdQu7fXVentRMk1QX7D9otmiiNuX+GSxJhJC2Lyzw65O9EUgG
+    1yVJon6RkUGtqBqKIuLksKwEr//ELnjmXit4LQKSnqKr0FTCB7seIrKJNyb35Qnq
+    qy9a/Unhokrmdda1tr6MbqU8l7HmxLuSd/Ky+L0eDNtYv6YfMewtjg0TtAnFyQov
+    rdXmeq1dy9HLo3Ds4AFz3Gx9076TxcRS/iI=
     -----END CERTIFICATE-----
 
 ---
@@ -57,7 +108,28 @@ data:
     network.host: 0.0.0.0
     
     # 보안 설정 비활성화
-    plugins.security.disabled: true
+    #plugins.security.disabled: true
+    plugins.security.ssl.transport.enabled: true
+    plugins.security.ssl.transport.pemcert_filepath: certificates/esnode.pem
+    plugins.security.ssl.transport.pemkey_filepath: certificates/esnode-key.pem
+    plugins.security.ssl.transport.pemtrustedcas_filepath: certificates/root-ca.pem
+    #plugins.security.ssl.transport.pemcert_filepath: certs/esnode.pem
+    #plugins.security.ssl.transport.pemkey_filepath: certs/esnode-key.pem
+    #plugins.security.ssl.transport.pemtrustedcas_filepath: certs/root-ca.pem
+
+    plugins.security.ssl.http.enabled: true
+    plugins.security.ssl.http.pemcert_filepath: certificates/esnode.pem
+    plugins.security.ssl.http.pemkey_filepath: certificates/esnode-key.pem
+    plugins.security.ssl.http.pemtrustedcas_filepath: certificates/root-ca.pem
+    #plugins.security.ssl.http.pemcert_filepath: certs/esnode.pem
+    #plugins.security.ssl.http.pemkey_filepath: certs/esnode-key.pem
+    #plugins.security.ssl.http.pemtrustedcas_filepath: certs/root-ca.pem
+
+    plugins.security.allow_unsafe_democertificates: true
+    plugins.security.allow_default_init_securityindex: true
+
+    plugins.security.authcz.admin_dn:
+      - "CN=admin,OU=client,O=org,L=city,ST=state,C=DE"
 
 ---
 
@@ -69,6 +141,7 @@ metadata:
 type: Opaque
 stringData:
   admin-password: egovFrame123!@#  # 실제 운영환경에서는 더 안전한 방식으로 관리해야 합니다
+  master-key: 'a4c9f137b26d58e1f4b9a7c0d2e3f615'
 
 ---
 
@@ -108,6 +181,17 @@ spec:
           value: single-node
         - name: OPENSEARCH_JAVA_OPTS
           value: "-Xms1g -Xmx1g"
+        - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+          #value: "egovFrame123!@#"
+          valueFrom:
+            secretKeyRef:
+              name: opensearch-secret
+              key: admin-password
+        - name: DATASOURCE_MASTER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: opensearch-secret
+              key: master-key
         volumeMounts:
         - name: config
           mountPath: /usr/share/opensearch/config/opensearch.yml

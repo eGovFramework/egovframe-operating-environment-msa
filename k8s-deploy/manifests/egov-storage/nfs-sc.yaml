@@ -8,5 +8,6 @@ metadata:
     app: nfs
     name: nfs
 provisioner: nfs-provisioner
+#reclaimPolicy: Retain # 삭제하지 않고 유지
 parameters:
   archiveOnDelete: "false"

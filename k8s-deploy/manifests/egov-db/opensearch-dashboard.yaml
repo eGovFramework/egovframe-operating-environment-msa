@@ -19,12 +19,12 @@ spec:
         ports:
         - containerPort: 5601
         env:
-        - name: DISABLE_SECURITY_DASHBOARDS_PLUGIN
-          value: "true"
+#        - name: DISABLE_SECURITY_DASHBOARDS_PLUGIN
+#          value: "true"
+        - name: OPENSEARCH_SSL_VERIFICATIONMODE # Turns off the security plugin for Dashboards. Recommended only for testing purposes, not for production use.
+          value: "none" # "full" : Enables full SSL certificate verification, including hostname validation. Recommended for production environments with valid certificates.
         - name: OPENSEARCH_HOSTS
-          value: '["http://opensearch-0.opensearch-headless:9200"]'
-        - name: OPENSEARCH_SSL_VERIFICATIONMODE
-          value: "none"
+          value: '["https://opensearch-0.opensearch-headless:9200"]'
         readinessProbe:
           httpGet:
             scheme: HTTP
