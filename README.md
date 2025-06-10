@@ -1,5 +1,13 @@
 # 로컬 개발 환경 구축
 
+## 표준프레임워크 MSA 공통컴포넌트 가져오기
+
+### 레포지토리에서 가져오기
+ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, EgovCmmnCode, EgovCmmnCode, EgovLogin, EgovMain, EgovQuestionnaire, EgovMobileId 12종 프로젝트를 가져온다.
+```
+./import_msa_project.sh # 모든 표준프레임워크 MSA 공통컴포넌트 프로젝트를 클론하여 가져온다.
+```
+
 ## 빌드 전 설정
 
 ### ConfigServer 설정
