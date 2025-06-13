@@ -42,9 +42,11 @@ spec:
         - name: OPENSEARCH_KEYSTORE_PASSWORD
           value: "egov1234!"
         - name: OPENSEARCH_PROTOCOL
-          value: "http"  # https에서 http로 변경
+          value: "https"  # https에서 http로 변경
+        - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+          value: "admin"  # 초기 비밀번호
         - name: OPENSEARCH_URL
-          value: "opensearch-0.opensearch-headless.egov-db"  # 내부 서비스 주소 사용
+          value: "opensearch-0.opensearch-headless.egov-db.svc.cluster.local"  # 내부 서비스 주소 사용
         - name: OPENSEARCH_PORT
           value: "9200"
         - name: DISABLE_SECURITY
