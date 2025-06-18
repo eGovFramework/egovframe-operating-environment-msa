@@ -19,6 +19,9 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: egov-common-config
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "k8s"

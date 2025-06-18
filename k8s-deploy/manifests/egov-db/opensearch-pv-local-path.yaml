@@ -1,13 +1,13 @@
-# NFS PersistentVolumeClaim
+# Local Path Provisioner PersistentVolumeClaim
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: opensearch-pvc-nfs
+  name: opensearch-pvc-local
   namespace: egov-db
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
-  storageClassName: nfs
+  storageClassName: local-path

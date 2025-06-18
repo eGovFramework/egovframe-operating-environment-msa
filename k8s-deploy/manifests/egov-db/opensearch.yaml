@@ -214,11 +214,11 @@ spec:
           secretName: opensearch-certs
       - name: data
         persistentVolumeClaim:
-          # To use hostPath storage, uncomment this and comment out the NFS claim
-          # claimName: opensearch-pvc-hostpath
-          
+          # To use Local Path storage, uncomment this and comment out the NFS claim
           # Using NFS storage
-          claimName: opensearch-pvc-nfs
+          #claimName: opensearch-pvc-nfs
+          # Using Local Path storage
+          claimName: opensearch-pvc-local
 
 ---
 

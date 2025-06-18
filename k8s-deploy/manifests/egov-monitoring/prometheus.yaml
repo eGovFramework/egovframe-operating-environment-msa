@@ -545,7 +545,10 @@ spec:
             name: prometheus-rules
         - name: storage-volume
           persistentVolumeClaim:
-            claimName: prometheus-pvc-nfs
+            # 1. NFS Provisioner
+            #claimName: prometheus-pvc-nfs
+            # 2. Local-Path Provisioner
+            claimName: prometheus-pvc-local
       terminationGracePeriodSeconds: 300
       affinity:
         podAntiAffinity:

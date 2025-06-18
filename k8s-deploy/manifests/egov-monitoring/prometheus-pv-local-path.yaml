@@ -1,0 +1,14 @@
+# Local Path Provisioner PersistentVolumeClaim
+# PVC만 정의 (동적 프로비저닝이므로 PV는 필요 없음)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc-local
+  namespace: egov-monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: local-path

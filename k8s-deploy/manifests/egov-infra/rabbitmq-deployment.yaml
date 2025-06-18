@@ -55,4 +55,7 @@ spec:
       volumes:
       - name: rabbitmq-data
         persistentVolumeClaim:
-          claimName: rabbitmq-pvc-nfs
+          # Using NFS storage
+          #claimName: rabbitmq-pvc-nfs
+          # Using Local Path storage
+          claimName: rabbitmq-pvc-local

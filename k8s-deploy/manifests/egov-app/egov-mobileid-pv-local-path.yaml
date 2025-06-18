@@ -1,0 +1,13 @@
+# Local Path PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-mobileid-pvc-local
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+  storageClassName: local-path

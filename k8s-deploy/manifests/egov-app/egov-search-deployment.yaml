@@ -43,14 +43,12 @@ spec:
           value: "egov1234!"
         - name: OPENSEARCH_PROTOCOL
           value: "https"  # https에서 http로 변경
-        - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-          value: "admin"  # 초기 비밀번호
+        - name: OPENSEARCH_PASSWORD
+          value: "admin"
         - name: OPENSEARCH_URL
           value: "opensearch-0.opensearch-headless.egov-db.svc.cluster.local"  # 내부 서비스 주소 사용
         - name: OPENSEARCH_PORT
           value: "9200"
-        - name: DISABLE_SECURITY
-          value: "true"  # 보안 비활성화 설정 추가
         - name: LOGGING_LEVEL_EGOVFRAMEWORK_COM_EXT_OPS
           value: "DEBUG"
         - name: LOGGING_LEVEL_ORG_OPENSEARCH
@@ -97,7 +95,11 @@ spec:
       volumes:
       - name: search-config-shared
         persistentVolumeClaim:
-          claimName: egov-search-config-pvc-nfs
+          # To use Local Path storage, uncomment this and comment out the NFS claim
+          # Using NFS storage
+          #claimName: egov-search-config-pvc-nfs
+          # Using Local Path storage
+          claimName: egov-search-config-pvc-local
 ---
 apiVersion: v1
 kind: Service

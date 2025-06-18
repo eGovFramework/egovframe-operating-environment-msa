@@ -94,7 +94,9 @@ spec:
       - name: data
         persistentVolumeClaim:
           # To use NFS storage, change this to mysql-pvc-nfs
-          claimName: mysql-pvc-nfs
+          #claimName: mysql-pvc-nfs
+          # To use Local Path storage, change this to mysql-pvc-local
+          claimName: mysql-pvc-local
 
 ---
 # MySQL Headless Service
