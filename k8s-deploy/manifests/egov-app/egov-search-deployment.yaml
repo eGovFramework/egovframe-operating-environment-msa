@@ -19,6 +19,13 @@ spec:
         imagePullPolicy: Always #IfNotPresent : Downloads the image only if it does not exist on the node
         ports:
         - containerPort: 80
+        #resources:
+        #  requests:
+        #    cpu: "500m"
+        #    memory: "4096Mi"
+        #  limits:
+        #    cpu: "500m"
+        #    memory: "4096Mi"
         envFrom:
         - configMapRef:
             name: egov-common-config
@@ -43,6 +50,8 @@ spec:
           value: "egov1234!"
         - name: OPENSEARCH_PROTOCOL
           value: "https"  # https에서 http로 변경
+        - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+          value: "admin"
         - name: OPENSEARCH_PASSWORD
           value: "admin"
         - name: OPENSEARCH_URL
