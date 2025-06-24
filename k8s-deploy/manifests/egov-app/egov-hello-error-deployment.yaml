@@ -14,10 +14,12 @@ spec:
       labels:
         app: egov-hello
         variant: error
+        version: "v4.3.0"
     spec:
       containers:
       - name: egov-hello
-        image: egovhello:k8s
+        image: egovframe/egovhello:4.3.0.k8s
+        imagePullPolicy: Always #IfNotPresent : Downloads the image only if it does not exist on the node
         ports:
         - containerPort: 80
         env:

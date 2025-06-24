@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: egov-board
+        version: "v4.3.0"
     spec:
       containers:
       - name: egov-board
