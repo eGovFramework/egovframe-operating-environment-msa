@@ -7,7 +7,7 @@ stringData:
   alertmanager.yaml: |
     global:
       resolve_timeout: 5m
-      slack_api_url: 'https://hooks.slack.com/triggers/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'
+      slack_api_url: 'https://hooks.slack.com/services/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'
 
     route:
       group_by: ['alertname', 'service']
