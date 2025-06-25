@@ -47,6 +47,26 @@ data:
     - /etc/prometheus/rules/*.yaml
 
     scrape_configs:
+    - job_name: istio-proxy-pods
+      metrics_path: /stats/prometheus
+      scheme: http
+      scrape_interval: 15s
+      honor_timestamps: false
+      kubernetes_sd_configs:
+      - role: pod                               # 모든 파드 대상으로 SD
+      relabel_configs:
+      # 1. istio-proxy 컨테이너만 남긴다
+      - source_labels: [__meta_kubernetes_pod_container_name]
+        regex: istio-proxy
+        action: keep
+      # 2. __address__ = <pod_ip>:15090 로 강제 세팅
+      - source_labels: [__meta_kubernetes_pod_ip]
+        target_label: __address__
+        regex: (.*)
+        replacement: $1:15090
+      # 3. 파드 라벨을 모두 복사 → 검색/그라파나에서 편리
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
     - job_name: otel-collector
       honor_timestamps: true
       scrape_interval: 15s
@@ -489,7 +509,7 @@ spec:
         runAsUser: 65534
       containers:
         - name: prometheus
-          image: prom/prometheus:v2.45.0
+          image: prom/prometheus:v2.53.0
           args:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
@@ -498,6 +518,7 @@ spec:
             - "--web.enable-admin-api"
             - "--storage.tsdb.no-lockfile"
             - "--storage.tsdb.wal-compression"
+            - "--scrape.timestamp-tolerance=12h" # 30m, 1h, 3h 등으로도 가능
           ports:
             - containerPort: 9090
               name: http
@@ -546,9 +567,9 @@ spec:
         - name: storage-volume
           persistentVolumeClaim:
             # 1. NFS Provisioner
-            #claimName: prometheus-pvc-nfs
+            claimName: prometheus-pvc-nfs
             # 2. Local-Path Provisioner
-            claimName: prometheus-pvc-local
+            #claimName: prometheus-pvc-local
       terminationGracePeriodSeconds: 300
       affinity:
         podAntiAffinity:
