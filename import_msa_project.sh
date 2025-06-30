@@ -2,7 +2,7 @@
 
 # [1] 설정
 REPO_URL="https://github.com/eGovFramework/egovframe-common-components-msa-krds"
-TAG="v4.3.1"
+TAG="v4.3.2"
 TMP_DIR="./common-components-msa-temp"
 echo "Import Project - egovframe-common-components-msa $TAG"
 
