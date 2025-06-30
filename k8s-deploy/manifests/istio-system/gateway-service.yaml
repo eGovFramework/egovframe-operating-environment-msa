@@ -11,4 +11,4 @@ spec:
     - name: http2
       port: 80
       targetPort: 8080
-      nodePort: 32314  # 원하는 포트 지정
+      nodePort: 31088  # 원하는 포트 지정
