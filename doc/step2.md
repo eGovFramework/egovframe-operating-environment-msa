@@ -115,7 +115,7 @@ stop.sh                       ## 로컬 서비스 정지
     ```
 
 ### 2. Import 후 내부 디렉토리 구조   
-![import_msa_project](/images/import_after.png)
+![import_msa_project](./images/import_after.png)
 - 추가된 프로젝트
     - ConfigServer
     - EgovAuthor
