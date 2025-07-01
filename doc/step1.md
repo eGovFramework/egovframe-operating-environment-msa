@@ -36,7 +36,7 @@
 ## Docker Desktop 설치
 
 ### Window
-- [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop) 다운로드
+- [Docker Desktop for Window](https://www.docker.com/products/docker-desktop) 다운로드
 - WSL 설치 (PowerShell 관리자권한 실행)
     ```bash
     wsl --install
