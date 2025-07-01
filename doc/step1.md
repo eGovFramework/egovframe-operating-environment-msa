@@ -96,15 +96,3 @@ sudo apt-get install docker-compose-plugin
      </tr>
    </table>
 </div>
-
-<!-- | [HOME](/README.md) | [Step2. 프로젝트 준비 ▷](/step2.md) |
-|--------------------|-------------------------------------| -->
-
-<!-- <div style="display:flex; justify-content:space-between">
-<p>Step1. 환경설정</p>
-<a href="/Readme.md">HOME</a>
-<a href="/step2.md"> Step2. 프로젝트 준비 ▷</a>
-</div> -->
-
-  <!-- | Step1. 환경설정 | [HOME](/README.md) | [Step2. 프로젝트 준비 ▷](/step2.md) |
-  |----------------|--------------------|-------------------------------------| -->

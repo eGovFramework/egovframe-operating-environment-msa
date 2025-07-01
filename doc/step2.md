@@ -143,12 +143,3 @@ stop.sh                       ## 로컬 서비스 정지
      </tr>
    </table>
 </div>
-
-<!-- <div style="display:flex; justify-content:space-between">
-<a href="/step1.md">◁ Step1. 환경설정</a>
-<a href="/Readme.md">HOME</a>
-<a href="/step3.md">Step3. 프로젝트 빌드 ▷</a>
-</div> -->
-
-<!-- |  [◁ Step1. 환경설정](/step1.md) | [HOME](/README.md) | [Step3. 프로젝트 빌드 ▷](/step3.md) |
-|----------------|--------------------|-------------------------------------| -->

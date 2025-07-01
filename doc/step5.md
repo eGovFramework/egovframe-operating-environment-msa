@@ -136,15 +136,15 @@ token:
 
 ## 4. 실행결과 확인
 - **EurekaServer (localhost:8761)**   
-![eureka-list](/images//eureka-list.png)   
+![eureka-list](./images//eureka-list.png)   
 - **ConfigServer (localhost:8888)**   
-![configserver](/images/configserver.png)
+![configserver](./images/configserver.png)
     - token 값이 출력되는지 확인 필요
     - token값이 출력되지 않거나 accessToken 관련 null 에러가 생기는 경우 ConfigServer와 연결이 제대로 이루어지지 않았을 수 있음   
 
 
 - **GatewayServer (localhost:9000)**   
-![gatewayserver-main](/images/gatewayserver.png)
+![gatewayserver-main](./images/gatewayserver.png)
     - 로그인 테스트
         |구분 | 아이디 | 비밀번호 |
         |---|---|---|
@@ -154,7 +154,7 @@ token:
     - 로그인이 되지 않는 경우 DB에 테이블과 데이터 구성이 되어있는지 확인
 - **docker 명령어를 이용해 확인**   
     - ```docker ps -a```   
-        ![docker_ps_list](/images/docker_ps.png)
+        ![docker_ps_list](./images/docker_ps.png)
         - 해당 명령어는 컨테이너에서 실행된 서비스를 보여주는 기능으로 에러 발생 시 실제 오류 로그 확인 필요
         - ```docker logs <Container ID>```
         - 또는 docker-desktop에서 문제가 있는 container 로그 확인
@@ -168,13 +168,3 @@ token:
      </tr>
    </table>
 </div>
-
-<!-- </br>
-<div style="display:flex; justify-content:space-between">
-<a href="/step3.md">◁ Step4. 도커 이미지 빌드</a>
-<a href="/Readme.md">HOME</a>
-<p> Step5. 서비스 실행 </p>
-</div> -->
-
-<!-- | [◁ Step4. 도커 이미지 빌드](/step4.md) | [HOME](/README.md) |
-|----------------|--------------------| -->

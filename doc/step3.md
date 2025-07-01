@@ -150,7 +150,7 @@
 
 ### 3. 빌드 후 내부 디렉토리
 - 각 서비스별 내부에 target 폴더 생성 확인   
-    ![target](/images/target.png)
+    ![target](./images/target.png)
 
 ---
 
@@ -163,13 +163,3 @@
      </tr>
    </table>
 </div>
-
-
-<!-- <div style="display:flex; justify-content:space-between">
-<a href="/step2.md">◁ Step2. 프로젝트 준비</a>
-<a href="/Readme.md">HOME</a>
-<a href="/step4.md"> Step4. 도커 이미지 빌드 ▷</a>
-</div> -->
-
-<!-- |  [◁ Step2. 프로젝트 준비](/step2.md) | [HOME](/README.md) | [Step4. 도커 이미지 빌드 ▷](/step4.md) |
-|----------------|--------------------|-------------------------------------| -->

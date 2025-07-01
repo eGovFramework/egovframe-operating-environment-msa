@@ -1,14 +1,3 @@
-
-</br>
-<div style="display:flex; justify-content:space-between">
-<a href="/step3.md">◁ Step3. 프로젝트 빌드</a>
-<p> Step4. 도커 이미지 빌드 </p>
-<a href="/step5.md"> Step5. 서비스 실행 ▷</a>
-</div>
-
----
-</br>
-
 # 도커 이미지 빌드 (Docker Image Build)
 
 ## 1. OpenSearch 이미지 빌드
@@ -29,9 +18,9 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
     docker build -t opensearch-with-nori:2.15.0 -f Dockerfile.opensearch-with-nori .
     ```   
     - build 결과   
-        ![egovsearch_image_build](/images/opensearch-with-nori.png)
+        ![egovsearch_image_build](./images/opensearch-with-nori.png)
     - docker-desktop상 image가 추가되었는지 확인
-        ![docker-image_opensearch-with-nori](/images/docker-opensearch-image.png)
+        ![docker-image_opensearch-with-nori](./images/docker-opensearch-image.png)
 
 
 ## 3. 서비스 이미지 빌드
@@ -145,21 +134,14 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
                 ```
     - 이미지 빌드 결과 확인
         - 빌드 후 출력되는 결과
-            ![docker-image-build-shell](/images/docker-image-build.png)   
+            ![docker-image-build-shell](./images/docker-image-build.png)   
             - 명령어를 통해서도 확인 가능   
                 ```docker images | grep latest```
 
         - docker-desktop   
-            ![docker_image_docker-desktop](/images/docker_image_docekr-desktop.png)
-
-
-        
-</br>
-
-
+            ![docker_image_docker-desktop](./images/docker_image_docekr-desktop.png)
 
 ---
-
 
 <div align="center">
    <table>
@@ -170,12 +152,3 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
      </tr>
    </table>
 </div>
-
-<!-- </br>
-<div style="display:flex; justify-content:space-between">
-<a href="/step3.md">◁ Step3. 프로젝트 빌드</a>
-<a href="/Readme.md">HOME</a>
-<a href="/step5.md"> Step5. 서비스 실행 ▷</a>
-</div> -->
-<!-- |  [◁ Step3. 프로젝트 빌드](/step3.md) | [HOME](/README.md) | [Step5. 서비스 실행 ▷](/step5.md) |
-|----------------|--------------------|-------------------------------------| -->
