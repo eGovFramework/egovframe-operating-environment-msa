@@ -13,6 +13,7 @@ DIRS=(
   EgovBoard
   EgovCmmnCode
   EgovLogin
+  EgovLoginPolicy
   EgovMain
   EgovMobileId
   EgovQuestionnaire

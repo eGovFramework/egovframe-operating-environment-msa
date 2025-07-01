@@ -18,16 +18,16 @@ services=(
     "EgovAuthor"
     "EgovBoard"
     "EgovCmmnCode"
-    "EgovHello"
     "EgovLogin"
+    "EgovLoginPolicy"
     "EgovMain"
-#    "EgovMobileId"
+    "EgovMobileId"
     "EgovQuestionnaire"
     "EgovSearch"
 )
 
 # 이미지 태그 정의
-IMAGE_TAG="latest"
+IMAGE_TAG="4.3.2"
 K8S_TAG="k8s"
 
 # 결과 저장을 위한 임시 파일

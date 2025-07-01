@@ -38,6 +38,7 @@ services=(
     "EgovCmmnCode"
     "EgovHello"
     "EgovLogin"
+    "EgovLoginPolicy"
     "EgovMain"
     "EgovMobileId"
     "EgovQuestionnaire"

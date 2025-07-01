@@ -209,6 +209,19 @@ services:
       gateway-server:
         condition: service_started
 
+  egov-login-policy:
+    image: egovloginpolicy:${IMAGE_TAG}
+    container_name: egov-login-policy
+    ports:
+      - "${EGOV_LOGIN_POLICY_PORT}:${EGOV_LOGIN_POLICY_PORT}"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE_DEFAULT}
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:${CONFIG_SERVER_PORT}
+    depends_on:
+      mysql-com:
+        condition: service_healthy
+      gateway-server:
+        condition: service_started
   egov-main:
     image: egovmain:${IMAGE_TAG}
     container_name: egov-main

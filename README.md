@@ -14,6 +14,18 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
 
 ## 3. Docker 기반 배포 및 가이드
 
+- 구성
+  - [시스템 요구사항](/doc/system_requirements.md)
+  - [컨테이너 구성](/doc/container.md)
+  - [시스템 아키텍처](/doc/architecture-diagram.md)
+
+- 설치가이드
+  - [Step1. 환경설정 ▷](/doc/step1.md)   
+  - [Step2. 프로젝트 준비 ▷](/doc/step2.md)   
+  - [Step3. 프로젝트 빌드 ▷](/doc/step3.md)   
+  - [Step4. 도커 이미지 빌드 ▷](/doc/step4.md)   
+  - [Step5. 서비스 실행 ▷](/doc/step5.md)   
+
 ## 4. Kubernetes 기반 배포 및 가이드
 
 

@@ -7,14 +7,14 @@ RUN apt-get update && \
 
 COPY target/*.jar /app/app.jar
 
-ENV SERVER_PORT=8085 \
+ENV SERVER_PORT=8086 \
     SPRING_APPLICATION_NAME=EgovMain \
     SPRING_PROFILES_ACTIVE=docker \
     SPRING_CLOUD_CONFIG_URI=http://config-server:8888
 
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl -f http://localhost:8085/actuator/health || exit 1
+  CMD curl -f http://localhost:8086/actuator/health || exit 1
 
-EXPOSE 8085
+EXPOSE 8086
 
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
