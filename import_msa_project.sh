@@ -49,7 +49,7 @@ done
 
 # [5] 임시 파일 제거
 echo "[INFO] Cleaning up..."
-#rm -rf "$TMP_DIR"
+rm -rf "$TMP_DIR"
 
 echo "[DONE] All selected components have been copied."
 

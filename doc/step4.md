@@ -43,7 +43,6 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
             "EgovAuthor"
             "EgovBoard"
             "EgovCmmnCode"
-            "EgovHello"
             "EgovLogin"
             "EgovLoginPolicy"
             "EgovMain"

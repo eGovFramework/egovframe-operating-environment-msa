@@ -110,13 +110,23 @@ token:
 - docker-compose up을 통해 실행하면 서비스가 docker 컨테이너에서 실행되므로 localhost가 아닌 컨테이너 이름으로 연결되어야함
 
 ### 3) EgovMain의 EurekaServer 설정 변경
-- EgovMain은 spring-cloud-config를 사용하지 않아 ConfigServer의 설정을 가져오지 않음.
-- ```EgovMain/src/main/resources/application.yml```
+- EgovMain은 spring-cloud-config를 사용하지 않아 ConfigServer의 설정을 가져오지 않음.   
+```EgovMain/src/main/resources/application.yml```
     ```yaml
-    serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka/
+    eureka:
+        client:
+            serviceUrl:
+                defaultZone: http://eureka-server:8761/eureka/ 
     ```
-    - localhost가 아닌 docker 컨테이너의 eureka서버로 연결될 수 있도록 변경
+  1) application.yml에서 localhost로 지정된 url을 eureka-server로 지정
+     - 추가 파일을 생성하지 않아도 되지만 localhost를 이용해 서비스 실행 시 다시 localhost로 url을 변경해주어야 하는 번거로움이 있음
+
+     </br>
+  2) application-docker.yml을 생성하여 위의 코드 작성
+     - 파일을 추가해야하지만 local과 docker 실행 둘 다 대응할 수 있음
+
+     </br>
+
 - 수정 후 build 진행
     - `./build.sh EgovMain`
     - `./docker-build.sh EgovMain`

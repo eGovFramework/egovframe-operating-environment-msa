@@ -36,7 +36,6 @@ services=(
     "EgovAuthor"
     "EgovBoard"
     "EgovCmmnCode"
-    "EgovHello"
     "EgovLogin"
     "EgovLoginPolicy"
     "EgovMain"
