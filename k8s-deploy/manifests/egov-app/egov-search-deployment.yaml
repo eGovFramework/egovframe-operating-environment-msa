@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: egov-search
-        image: egovframe/egovsearch:4.3.0.k8s
+        image: egovframe/egovsearch:4.3.2.k8s
         imagePullPolicy: Always #IfNotPresent : Downloads the image only if it does not exist on the node
         ports:
         - containerPort: 80
@@ -107,9 +107,9 @@ spec:
         persistentVolumeClaim:
           # To use Local Path storage, uncomment this and comment out the NFS claim
           # Using NFS storage
-          #claimName: egov-search-config-pvc-nfs
+          claimName: egov-search-config-pvc-nfs
           # Using Local Path storage
-          claimName: egov-search-config-pvc-local
+          #claimName: egov-search-config-pvc-local
 ---
 apiVersion: v1
 kind: Service

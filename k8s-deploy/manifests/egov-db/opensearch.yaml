@@ -113,17 +113,11 @@ data:
     plugins.security.ssl.transport.pemcert_filepath: certificates/esnode.pem
     plugins.security.ssl.transport.pemkey_filepath: certificates/esnode-key.pem
     plugins.security.ssl.transport.pemtrustedcas_filepath: certificates/root-ca.pem
-    #plugins.security.ssl.transport.pemcert_filepath: certs/esnode.pem
-    #plugins.security.ssl.transport.pemkey_filepath: certs/esnode-key.pem
-    #plugins.security.ssl.transport.pemtrustedcas_filepath: certs/root-ca.pem
 
     plugins.security.ssl.http.enabled: true
     plugins.security.ssl.http.pemcert_filepath: certificates/esnode.pem
     plugins.security.ssl.http.pemkey_filepath: certificates/esnode-key.pem
     plugins.security.ssl.http.pemtrustedcas_filepath: certificates/root-ca.pem
-    #plugins.security.ssl.http.pemcert_filepath: certs/esnode.pem
-    #plugins.security.ssl.http.pemkey_filepath: certs/esnode-key.pem
-    #plugins.security.ssl.http.pemtrustedcas_filepath: certs/root-ca.pem
 
     plugins.security.allow_unsafe_democertificates: true
     plugins.security.allow_default_init_securityindex: true
@@ -216,9 +210,9 @@ spec:
         persistentVolumeClaim:
           # To use Local Path storage, uncomment this and comment out the NFS claim
           # Using NFS storage
-          #claimName: opensearch-pvc-nfs
+          claimName: opensearch-pvc-nfs
           # Using Local Path storage
-          claimName: opensearch-pvc-local
+          #claimName: opensearch-pvc-local
 
 ---
 
