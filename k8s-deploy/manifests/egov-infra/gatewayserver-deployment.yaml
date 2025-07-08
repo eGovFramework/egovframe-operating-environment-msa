@@ -12,11 +12,11 @@ spec:
     metadata:
       labels:
         app: gateway-server
-        version: "v4.3.0"
+        version: "v4.3.2"
     spec:
       containers:
       - name: gateway-server
-        image: egovframe/gatewayserver:4.3.0.k8s
+        image: egovframe/gatewayserver:4.3.2.k8s
         imagePullPolicy: Always
         ports:
         - containerPort: 80

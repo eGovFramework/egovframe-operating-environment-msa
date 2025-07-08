@@ -12,11 +12,11 @@ spec:
     metadata:
       labels:
         app: egov-mobileid
-        version: "v4.3.0"
+        version: "v4.3.2"
     spec:
       containers:
       - name: egov-mobileid
-        image: egovmobileid:k8s
+        image: egovframe/egovmobileid:4.3.2.k8s
         ports:
         - containerPort: 80
         envFrom:
@@ -87,7 +87,12 @@ spec:
       volumes:
       - name: config-volume
         persistentVolumeClaim:
+          # To use Local Path storage, uncomment this and comment out the NFS claim
+          # Using NFS storage
           claimName: egov-mobileid-pvc-nfs  # PVC 사용
+          # Using Local Path storage
+          #claimName: egov-mobileid-pvc-local
+          
 ---
 apiVersion: v1
 kind: Service
