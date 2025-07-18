@@ -1,0 +1,13 @@
+# NFS PersistentVolumeClaim for Loki
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-pvc-nfs
+  namespace: egov-monitoring
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: nfs 

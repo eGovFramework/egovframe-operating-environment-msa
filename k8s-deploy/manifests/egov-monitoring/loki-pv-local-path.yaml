@@ -1,0 +1,13 @@
+# Local Path PersistentVolumeClaim for Loki
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-pvc-local
+  namespace: egov-monitoring
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-path

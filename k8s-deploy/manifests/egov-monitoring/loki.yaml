@@ -30,15 +30,41 @@ data:
     schema_config:
       configs:
         - from: 2020-10-24
-          store: boltdb-shipper
+          store: tsdb
           object_store: filesystem
-          schema: v11
+          schema: v13
           index:
             prefix: index_
             period: 24h
 
     ruler:
       alertmanager_url: http://localhost:9093
+
+    storage_config:
+      tsdb_shipper:
+        active_index_directory: /data/loki/tsdb-shipper-active
+        cache_location: /data/loki/tsdb-shipper-cache
+        cache_ttl: 24h
+      filesystem:
+        directory: /data/loki/chunks
+
+    compactor:
+      working_directory: /data/loki/compactor
+      compaction_interval: 10m
+      retention_enabled: true
+      retention_delete_delay: 2h
+      retention_delete_worker_count: 150
+      delete_request_store: filesystem
+
+    #로그 용량 관련 기능 활성화
+    limits_config:
+      volume_enabled: true # 로그 볼륨기능 활성화
+      discover_log_levels: true # 로그 레벨 자동 탐지 (Loki 3.x+)
+      retention_period: 720h # 로그를 보관할 기간(30일)
+
+    # 패턴 감지 기능 활성화 (Loki 3.x+)
+    pattern_ingester:
+      enabled: true # 로그 패턴 자동 감지 및 분석
 ---
 apiVersion: v1
 kind: Service
@@ -76,7 +102,7 @@ spec:
         runAsUser: 10001
       containers:
         - name: loki
-          image: grafana/loki:2.9.2
+          image: grafana/loki:3.2.2
           args:
             - -config.file=/etc/loki/loki.yaml
           ports:
@@ -105,4 +131,5 @@ spec:
           configMap:
             name: loki
         - name: storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: loki-pvc-nfs
