@@ -164,8 +164,12 @@ spec:
             key: loki.resource.labels
             value: service.name
     exporters:
-      otlp:
+      otlp/jaeger:
         endpoint: jaeger-collector.egov-monitoring.svc.cluster.local:4317
+        tls:
+          insecure: true
+      otlp/tempo:
+        endpoint: tempo.egov-monitoring.svc.cluster.local:4317
         tls:
           insecure: true
       prometheus:
@@ -187,9 +191,9 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch, attributes]
-          exporters: [otlp]
+          exporters: [otlp/jaeger, otlp/tempo]
         metrics:
-          receivers: [prometheus]
+          receivers: [otlp, prometheus]
           processors: [memory_limiter, batch]
           exporters: [prometheus]
         logs:

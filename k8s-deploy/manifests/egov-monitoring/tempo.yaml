@@ -1,0 +1,202 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-config
+  namespace: egov-monitoring
+data:
+  tempo.yaml: |
+    server:
+      http_listen_port: 3200
+      log_level: info
+
+    distributor:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+        jaeger:
+          protocols:
+            thrift_http:
+              endpoint: 0.0.0.0:14268
+            grpc:
+              endpoint: 0.0.0.0:14250
+
+    ingester:
+      max_block_duration: 5m
+
+    compactor:
+      compaction:
+        block_retention: 1h
+
+    metrics_generator:
+      registry:
+        external_labels:
+          source: tempo
+          cluster: egov
+      storage:
+        path: /data/tempo/generator/wal
+        remote_write:
+          - url: http://prometheus.egov-monitoring.svc.cluster.local:9090/api/v1/write
+            send_exemplars: true
+
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /data/tempo/traces
+        wal:
+          path: /data/tempo/wal
+        pool:
+          max_workers: 100
+          queue_depth: 10000
+
+    usage_report:
+      reporting_enabled: false
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempo
+  namespace: egov-monitoring
+  labels:
+    app: tempo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tempo
+  template:
+    metadata:
+      labels:
+        app: tempo
+        sidecar.istio.io/inject: "false"
+    spec:
+      serviceAccountName: tempo
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      initContainers:
+      - name: init-tempo
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          mkdir -p /data/tempo/traces /data/tempo/wal /data/tempo/generator/wal
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 10001
+          runAsGroup: 10001
+        volumeMounts:
+        - name: tempo-data
+          mountPath: /data/tempo
+      containers:
+      - name: tempo
+        image: grafana/tempo:2.6.0
+        args:
+          - "-config.file=/etc/tempo/tempo.yaml"
+          - "-mem-ballast-size-mbs=1024"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 10001
+          runAsGroup: 10001
+        ports:
+        - name: http
+          containerPort: 3200
+          protocol: TCP
+        - name: grpc-otlp
+          containerPort: 4317
+          protocol: TCP
+        - name: http-otlp
+          containerPort: 4318
+          protocol: TCP
+        - name: jaeger-http
+          containerPort: 14268
+          protocol: TCP
+        - name: jaeger-grpc
+          containerPort: 14250
+          protocol: TCP
+        volumeMounts:
+        - name: tempo-config
+          mountPath: /etc/tempo
+        - name: tempo-data
+          mountPath: /data/tempo
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 3200
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3200
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: tempo-config
+        configMap:
+          name: tempo-config
+      - name: tempo-data
+        persistentVolumeClaim:
+          claimName: tempo-pvc-nfs
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tempo
+  namespace: egov-monitoring
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tempo
+  namespace: egov-monitoring
+  labels:
+    app: tempo
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 3200
+    protocol: TCP
+    targetPort: http
+    nodePort: 30006
+  - name: grpc-otlp
+    port: 4317
+    protocol: TCP
+    targetPort: grpc-otlp
+    nodePort: 30005
+  - name: http-otlp
+    port: 4318
+    protocol: TCP
+    targetPort: http-otlp
+  - name: jaeger-http
+    port: 14268
+    protocol: TCP
+    targetPort: jaeger-http
+  - name: jaeger-grpc
+    port: 14250
+    protocol: TCP
+    targetPort: jaeger-grpc
+  selector:
+    app: tempo 

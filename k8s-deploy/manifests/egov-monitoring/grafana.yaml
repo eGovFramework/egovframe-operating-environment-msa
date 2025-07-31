@@ -39,6 +39,8 @@ data:
     provisioning = /etc/grafana/provisioning
     [server]
     domain = ''
+    [feature_toggles]
+    enable = correlations,publicDashboards,dataConnectionsConsole
   datasources.yaml: |
     apiVersion: 1
     datasources:
@@ -70,6 +72,28 @@ data:
       orgId: 1
       type: jaeger
       url: http://tracing.egov-monitoring.svc.cluster.local:80/jaeger
+    - access: proxy
+      editable: true
+      isDefault: false
+      jsonData:
+        httpMethod: GET
+        serviceMap:
+          datasourceUid: prometheus
+        search:
+          hide: false
+        nodeGraph:
+          enabled: true
+        traceQuery:
+          timeShiftEnabled: true
+          spanStartTimeShift: "1h"
+          spanEndTimeShift: "-1h"
+        spanBar:
+          type: Tag
+          tag: http.status_code
+      name: Tempo
+      orgId: 1
+      type: tempo
+      url: http://tempo.egov-monitoring.svc.cluster.local:3200
   dashboardproviders.yaml: |
     apiVersion: 1
     providers:

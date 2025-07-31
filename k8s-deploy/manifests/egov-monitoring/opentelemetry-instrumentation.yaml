@@ -1,0 +1,118 @@
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: otel-instrumentation
+  namespace: default
+spec:
+  exporter:
+    endpoint: http://otel-collector.egov-monitoring.svc.cluster.local:4318
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+    - jaeger
+  sampler:
+    type: parentbased_traceidratio
+    argument: "0.1"  # 10% 샘플링
+  resource:
+    addK8sUIDAttributes: true
+  env:
+    - name: OTEL_SERVICE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.labels['app']
+    - name: OTEL_SERVICE_VERSION
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.labels['version']
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: "k8s.cluster.name=egov,k8s.namespace.name=$(K8S_NAMESPACE),k8s.pod.name=$(K8S_POD_NAME),k8s.container.name=$(K8S_CONTAINER_NAME)"
+    - name: K8S_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: K8S_POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: K8S_CONTAINER_NAME
+      value: ""
+  java:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.9.0
+    env:
+      - name: OTEL_JAVAAGENT_DEBUG
+        value: "false"
+      - name: OTEL_INSTRUMENTATION_JDBC_ENABLED
+        value: "true"
+      - name: OTEL_INSTRUMENTATION_SPRING_WEBMVC_ENABLED
+        value: "true"
+      - name: OTEL_INSTRUMENTATION_SPRING_WEBFLUX_ENABLED
+        value: "true"
+      - name: OTEL_INSTRUMENTATION_KAFKA_ENABLED
+        value: "true"
+      - name: OTEL_INSTRUMENTATION_REDIS_ENABLED
+        value: "true"
+  nodejs:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-nodejs:0.54.0
+  python:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-python:0.48b0
+  dotnet:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-dotnet:1.9.0
+
+---
+# egov-app 네임스페이스용 Instrumentation
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: otel-instrumentation
+  namespace: egov-app
+spec:
+  exporter:
+    endpoint: http://otel-collector.egov-monitoring.svc.cluster.local:4318
+  propagators:
+    - tracecontext
+    - baggage
+    - b3
+    - jaeger
+  sampler:
+    type: parentbased_traceidratio
+    argument: "1.0"  # 100% 샘플링
+  resource:
+    addK8sUIDAttributes: true
+  env:
+    - name: OTEL_SERVICE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.labels['app']
+    - name: OTEL_SERVICE_VERSION
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.labels['version']
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: "k8s.cluster.name=egov,k8s.namespace.name=$(K8S_NAMESPACE),k8s.pod.name=$(K8S_POD_NAME)"
+    - name: K8S_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: K8S_POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+  java:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.9.0
+    env:
+      - name: OTEL_JAVAAGENT_DEBUG
+        value: "false"
+      - name: OTEL_INSTRUMENTATION_JDBC_ENABLED
+        value: "true"
+      - name: OTEL_INSTRUMENTATION_SPRING_WEBMVC_ENABLED
+        value: "true"
+      - name: OTEL_INSTRUMENTATION_SPRING_WEBFLUX_ENABLED
+        value: "true"
+  nodejs:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-nodejs:0.54.0
+  python:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-python:0.48b0
+  dotnet:
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-dotnet:1.9.0 

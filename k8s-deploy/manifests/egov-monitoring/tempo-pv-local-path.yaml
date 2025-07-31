@@ -1,0 +1,13 @@
+# NFS PersistentVolumeClaim for Tempo
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tempo-pvc-local
+  namespace: egov-monitoring
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: local-path
