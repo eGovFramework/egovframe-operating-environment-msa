@@ -10,6 +10,8 @@ spec:
       app: egov-search
   template:
     metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "true"
       labels:
         app: egov-search
         version: "v4.3.2"

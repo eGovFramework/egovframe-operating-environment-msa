@@ -10,6 +10,8 @@ spec:
       app: egov-cmmncode
   template:
     metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "true"
       labels:
         app: egov-cmmncode
         version: "v4.3.2"

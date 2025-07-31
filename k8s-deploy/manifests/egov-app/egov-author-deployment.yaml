@@ -10,6 +10,8 @@ spec:
       app: egov-author
   template:
     metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "true"
       labels:
         app: egov-author
         version: "v4.3.2"

@@ -10,6 +10,8 @@ spec:
       app: egov-board
   template:
     metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: "true"
       labels:
         app: egov-board
         version: "v4.3.2"
