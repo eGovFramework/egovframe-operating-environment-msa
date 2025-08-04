@@ -68,6 +68,32 @@ spec:
             configMapKeyRef:
               name: egov-common-config
               key: ROLES_ROLE_USER
+         # 파일 업로드 관련 환경변수 추가
+        - name: file.ck.upload-dir
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: FILE_CK_UPLOAD_DIR
+        - name: file.ck.allowed-extensions
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: FILE_CK_ALLOWED_EXTENSIONS
+        - name: file.board.upload-dir
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: FILE_BOARD_UPLOAD_DIR
+        - name: file.board.allowed-extensions
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: FILE_BOARD_ALLOWED_EXTENSIONS
+        - name: file.max-file-size
+          valueFrom:
+            configMapKeyRef:
+              name: egov-common-config
+              key: FILE_MAX_FILE_SIZE
         - name: SPRING_RABBITMQ_HOST
           value: "rabbitmq.egov-infra.svc.cluster.local"
         - name: SPRING_RABBITMQ_PORT
@@ -90,6 +116,38 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 3
+          
+         # 파일업로드 볼륨 마운트 추가
+        volumeMounts:
+        - name: upload-volume
+          mountPath: /app/upload
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 3
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+            
+      # 볼륨 정의 추가
+      volumes:
+      - name: upload-volume
+        persistentVolumeClaim:
+          claimName: egov-fileupload-pvc
 ---
 apiVersion: v1
 kind: Service

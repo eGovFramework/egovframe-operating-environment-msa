@@ -1,0 +1,13 @@
+# egov-fileupload-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: egov-fileupload-pvc
+  namespace: egov-app
+spec:
+  accessModes:
+    - ReadWriteMany  # NFS는 ReadWriteMany 지원
+  resources:
+    requests:
+      storage: 5Gi  # 필요에 따라 용량 조정
+  storageClassName: nfs  # 기존 NFS 스토리지 클래스 사용

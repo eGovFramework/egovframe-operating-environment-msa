@@ -15,20 +15,34 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
 ## 3. Docker 기반 배포 및 가이드
 
 - 구성
-  - [시스템 요구사항](/doc/system_requirements.md)
-  - [컨테이너 구성](/doc/container.md)
-  - [시스템 아키텍처](/doc/architecture-diagram.md)
+  - [시스템 요구사항](/doc/docker/system_requirements.md)
+  - [컨테이너 구성](/doc/docker/container.md)
+  - [시스템 아키텍처](/doc/docker/architecture-diagram.md)
 
 - 설치가이드
-  - [Step1. 환경설정 ▷](/doc/step1.md)   
-  - [Step2. 프로젝트 준비 ▷](/doc/step2.md)   
-  - [Step3. 프로젝트 빌드 ▷](/doc/step3.md)   
-  - [Step4. 도커 이미지 빌드 ▷](/doc/step4.md)   
-  - [Step5. 서비스 실행 ▷](/doc/step5.md)   
+  - [Step1. 환경설정 ▷](/doc/docker/step1.md)   
+  - [Step2. 프로젝트 준비 ▷](/doc/docker/step2.md)   
+  - [Step3. 프로젝트 빌드 ▷](/doc/docker/step3.md)   
+  - [Step4. 도커 이미지 빌드 ▷](/doc/docker/step4.md)   
+  - [Step5. 서비스 실행 ▷](/doc/docker/step5.md)   
 
 ## 4. Kubernetes 기반 배포 및 가이드
 
+- 환경
+  |시스템|버전|
+  |---|---|
+  |kubernetes|1.32.5|
+  |Istio|1.25.3|
 
+- 배포 가이드
+  - [Step1. Namespace 생성 ▷](/doc/kubernetes/namespace.md)
+  - [Step2. Istio 배포 ▷](/doc/kubernetes/istio.md)
+  - [Step3. NFS Provisioner 배포 ▷](/doc/kubernetes/nfs.md)
+  - [Step4. 모니터링 도구 배포 ▷](/doc/kubernetes/monitoring.md)
+  - [Step5. DB 구성 및 배포 ▷](/doc/kubernetes/db.md)
+  - [Step6. Infra 구성 및 배포 ▷](/doc/kubernetes/infra.md)
+  - [Step7. Application 구성 및 배포 ▷](/doc/kubernetes/app.md)
+  
 
 # 로컬 개발 환경 구축
 
