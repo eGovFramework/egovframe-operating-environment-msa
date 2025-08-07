@@ -1,7 +1,7 @@
 ## 모니터링 도구 배포
 monitoring 도구의 동작 방식
 
-![prometheus](/images/prometheus.png)
+![prometheus](../images/prometheus.png)
 ### 1. Cert Manager 배포
 TLS/SSL 인증서 발급 및 관리르 자동화 하는 도구
 ```bash
@@ -56,7 +56,7 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
 
 ### 8. 서비스 확인
 #### 1) 정보수집과 모니터링 시각화 과정
-![monitoring](/images/monitoring.png)
+![monitoring](../images/monitoring.png)
 
 #### 2) 서비스 페이지 접속 정보
 | 서비스 | 포트 |정보|

@@ -64,25 +64,24 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
 ---
 > NFS용 서버를 다른 IP에 구축한 경우   
 - `k8s-deploy/manifests/egov-storage/nfs-deployment.yaml` 수정   
-```
-        env:
-        - name: PROVISIONER_NAME
-            value: nfs-provisioner
-        - name: NFS_SERVER
-            value: 192.168.56.21
-        - name: NFS_PATH
-            value: /srv/nfs
-        volumeMounts:
+    ```
+            env:
+            - name: PROVISIONER_NAME
+                value: nfs-provisioner
+            - name: NFS_SERVER
+                value: 192.168.56.21
+            - name: NFS_PATH
+                value: /srv/nfs
+            volumeMounts:
+            - name: nfs-volume
+                mountPath: /persistentvolumes
+        volumes:
         - name: nfs-volume
-            mountPath: /persistentvolumes
-    volumes:
-    - name: nfs-volume
-        nfs:
-        server: 192.168.56.21
-        path: /srv/nfs
-```
-- 192.168.56.21은 vagrant의 가상머신에 할당된 개인 네트워크 IP
-- vagrant를 사용중이 아닌 경우 NFS 서버가 구축된 서버의 IP 주소로 변경
+            nfs:
+            server: 192.168.56.21
+            path: /srv/nfs
+    ```
+    - `192.168.56.21`은 가상머신에 할당된 개인 네트워크 IP로 실제 환경에 맞는 IP로 수정 필요
 
 ---
 <div align="center">
