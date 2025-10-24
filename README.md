@@ -8,11 +8,12 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
 ./import_msa_project.sh
 ```
 
-## 1. Istio 소개
+## 1. Istio 및 OpenTelemetry 소개
 
-## 2. OpenTelemetry 소개
+- [Istio - Service Mesh 플랫폼](/doc/intro/istio.md)
+- [OpenTelemetry - 관찰 가능성 프레임워크(모니터링)](/doc/intro/opentelemetry.md)
 
-## 3. Docker 기반 배포 및 가이드
+## 2. Docker 기반 배포 및 가이드
 
 - 구성
   - [시스템 요구사항](/doc/docker/system_requirements.md)
@@ -26,7 +27,7 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
   - [Step4. 도커 이미지 빌드 ▷](/doc/docker/step4.md)   
   - [Step5. 서비스 실행 ▷](/doc/docker/step5.md)   
 
-## 4. Kubernetes 기반 배포 및 가이드
+## 3. Kubernetes 기반 배포 및 가이드
 
 - 환경
   |시스템|버전|
@@ -43,6 +44,17 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
   - [Step6. Infra 구성 및 배포 ▷](/doc/kubernetes/infra.md)
   - [Step7. Application 구성 및 배포 ▷](/doc/kubernetes/app.md)
   
+
+## 4. Istio 구성 및 설정 가이드
+- [Service Mesh 설정 및 관리](/doc/istio/istio_config_guide.md)
+- [Istio 트래픽 정책](/doc/istio/istio_traffic_policy.md)
+- [Istio Alert Manager](/doc/istio/istio_alert_manager.md)
+
+## 5. OpenTelemetry 구성 및 설정 가이드
+- [관찰 가능성 설정 및 구현](/doc/opentelemetry/opentelemetry_config_guide.md)
+
+
+
 
 # 로컬 개발 환경 구축
 
