@@ -34,6 +34,7 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
   |---|---|
   |kubernetes|1.32.5|
   |Istio|1.25.3|
+  |OpenTelemetry|0.120.0|
 
 - 배포 가이드
   - [Step1. Namespace 생성 ▷](/doc/kubernetes/namespace.md)
