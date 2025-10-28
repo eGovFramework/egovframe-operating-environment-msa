@@ -14,9 +14,7 @@
 
 ### 1.2 데이터 플로우
 ```
-애플리케이션 → OpenTelemetry Agent → OpenTelemetry Collector → 백엔드 시스템
-                    ↓                        ↓                      ↓
-               자동 계측              수집/처리/변환         Jaeger/Prometheus/Loki
+애플리케이션 → OpenTelemetry Agent(자동 계측) → OpenTelemetry Collector(수집/처리/변환) → 백엔드 시스템(Jaeger/Prometheus/Loki)
 ```
 
 ## 2. OpenTelemetry Operator 구성

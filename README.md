@@ -52,8 +52,7 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
 
 ## 5. OpenTelemetry 구성 및 설정 가이드
 - [관찰 가능성 설정 및 구현](/doc/opentelemetry/opentelemetry_config_guide.md)
-
-
+- [대시보드 활용 가이드](/doc/opentelemetry/monitoring_ui.md)
 
 
 # 로컬 개발 환경 구축
