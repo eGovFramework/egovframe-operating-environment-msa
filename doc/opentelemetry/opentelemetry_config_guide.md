@@ -532,13 +532,7 @@ data:
 - **Loki**: `loki.egov-monitoring.svc.cluster.local:3100`
 
 ### 7.2 데이터 플로우
-```
-애플리케이션 → OpenTelemetry Collector → 백엔드 시스템
-     ↓                    ↓                      ↓
-  Traces              Jaeger/Tempo          분산 추적 시각화
-  Metrics             Prometheus            메트릭 수집/저장
-  Logs                Loki                  로그 수집/저장
-```
+![OpenTelemetry Data Flow](../images/opentelemetry/opentelemetry_dataflow.png)
 
 ## 8. 배포 및 관리
 
