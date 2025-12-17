@@ -33,7 +33,7 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
   |시스템|버전|
   |---|---|
   |kubernetes|1.32.5|
-  |Istio|1.25.3|
+  |Istio|1.26.2|
   |OpenTelemetry|0.120.0|
 
 - 배포 가이드
