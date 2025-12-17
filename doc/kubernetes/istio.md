@@ -7,14 +7,14 @@
 - Kubernetes에서 지원되는 버전을 사용해야함
     - 프로젝트의 버전 구성
         - Kubernetes : 1.32.5
-        - Istio Version : 1.25.0
+        - Istio Version : 1.26.2
 - namespace 생성
     ```bash
     kubectl create namespace istio-system
     ```
 - Istio 바이너리(istioctl 등) 도구 설치
     ```bash
-    curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.25.0 TARGET_ARCH=amd64 sh -
+    curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.26.2 TARGET_ARCH=amd64 sh -
     ```
     - TARGET_ARCH
         - MAC/Linux인 경우 : arm64
