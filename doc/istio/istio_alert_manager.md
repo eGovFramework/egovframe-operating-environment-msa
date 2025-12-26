@@ -320,5 +320,4 @@ AlertManager와 연동된 Grafana 대시보드를 구성하여 다음 정보를 
 ## 참고 자료
 
 - [Prometheus AlertManager 공식 문서](https://prometheus.io/docs/alerting/latest/alertmanager/)
-- [Istio Observability 가이드](https://istio.io/latest/docs/ops/observability/)
-- [Kubernetes 모니터링 모범 사례](https://kubernetes.io/docs/tasks/debug-application-cluster/resource-usage-monitoring/)
+
