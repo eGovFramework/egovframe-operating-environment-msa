@@ -3,7 +3,7 @@ monitoring 도구의 동작 방식
 
 ![prometheus](../images/prometheus.png)
 ### 1. Cert Manager 배포
-TLS/SSL 인증서 발급 및 관리르 자동화 하는 도구
+TLS/SSL 인증서 발급 및 관리를 자동화 하는 도구
 ```bash
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.2/cert-manager.yaml
 ```
