@@ -338,7 +338,7 @@ istioctl proxy-config endpoints <pod-name>.<namespace>
 
 ## 9. 문제 해결
 
-### 10.1 일반적인 문제
+### 9.1 일반적인 문제
 - **사이드카 주입 실패**: 네임스페이스 레이블 확인
 - **트래픽 라우팅 실패**: VirtualService 규칙 검증
 - **서킷 브레이커 동작**: DestinationRule 설정 확인
