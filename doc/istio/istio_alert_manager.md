@@ -154,6 +154,7 @@ kubectl port-forward svc/alertmanager 9093:9093 -n egov-monitoring
 ```
 
 접속 URL: `http://localhost:9093` 또는 `http://<NodeIP>:31093`
+![AlertManager UI](../images/opentelemetry/alertmanager_ui.png)
 
 ## 모니터링 및 관리
 
