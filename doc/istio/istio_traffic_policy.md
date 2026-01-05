@@ -160,7 +160,16 @@ trafficPolicy:
 
 ## 5. 모니터링 및 디버깅
 
-### 5.1 Istio 상태 확인
+### 5.1 테스트앱 배포
+```bash
+# EgovHello 테스트앱 배포
+kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov-app/egov-hello-deployment.yaml
+
+# EgovHello 오류 발생용 테스트앱 배포
+kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov-app/egov-hello-error-deployment.yaml
+```
+
+### 5.2 Istio 상태 확인
 ```bash
 # Gateway 상태 확인
 kubectl get gateway -n istio-system
@@ -172,7 +181,7 @@ kubectl get virtualservice -n egov-app
 kubectl get destinationrule -n egov-app
 ```
 
-### 5.2 트래픽 흐름 확인
+### 5.3 트래픽 흐름 확인
 ```bash
 # Istio 프록시 로그 확인
 kubectl logs -f deployment/istio-ingressgateway -n istio-system
