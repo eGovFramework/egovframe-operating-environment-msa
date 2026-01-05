@@ -156,6 +156,10 @@ kubectl port-forward svc/alertmanager 9093:9093 -n egov-monitoring
 접속 URL: `http://localhost:9093` 또는 `http://<NodeIP>:31093`
 ![AlertManager UI](../images/opentelemetry/alertmanager_ui.png)
 
+### Promethues 웹 UI 접근
+접속 URL: `http://<NodeIP>:30004`
+![Prometheus Alerts UI](../images/opentelemetry/prometheus_alerts_ui.png)
+
 ## 모니터링 및 관리
 
 ### 1. 알림 상태 확인
@@ -289,34 +293,6 @@ kubectl exec -it deployment/prometheus -n egov-monitoring -- \
 **리소스 최적화:**
 - AlertManager 메모리 및 CPU 제한 설정
 - 저장소 볼륨 크기 조정
-
-## 보안 고려사항
-
-### 1. 민감한 정보 보호
-- Slack 웹훅 URL을 Secret으로 관리
-- 알림에 민감한 정보 포함 금지
-
-### 2. 접근 제어
-- AlertManager 웹 UI 접근 제한
-- RBAC 설정을 통한 권한 관리
-
-### 3. 네트워크 보안
-- 필요한 포트만 노출
-- 내부 네트워크 통신 암호화
-
-## 모니터링 대시보드
-
-### Grafana 대시보드 설정
-AlertManager와 연동된 Grafana 대시보드를 구성하여 다음 정보를 시각화:
-
-- 알림 발생 현황
-- 서비스별 오류율
-- Circuit Breaker 상태
-- 알림 해결 시간
-
-## 결론
-
-이 가이드를 통해 eGov MSA 환경에서 Istio와 AlertManager를 활용한 효과적인 모니터링 시스템을 구축할 수 있습니다. 정기적인 모니터링과 알림 규칙의 최적화를 통해 안정적인 서비스 운영을 보장할 수 있습니다.
 
 ## 참고 자료
 
