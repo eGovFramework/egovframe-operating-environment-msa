@@ -106,7 +106,7 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
 
 - OpenSearch-Dashboard   
     ![opensearch_dashboard](../images/opensearch_dashboard.png)
-    - `http://서버IP:30562` 접속
+    - `http://서버IP:30561` 접속
     - 기본 로그인 정보 : admin/admin
 
  ---
