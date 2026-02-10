@@ -36,6 +36,21 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
   |Istio|1.26.2|
   |OpenTelemetry|0.120.0|
 
+- 모니터링 인프라 구성
+
+  |서비스 그룹|서비스 명|오픈소스 명|버전|라이선스|비고|
+  |---|---|---|---|---|---|
+  |Cloud Native|Container Orchestration|Kubernetes|1.32.5|Apache 2.0||
+  |Cloud Native|Service Mesh|Istio|1.26.2|Apache 2.0||
+  |Monitoring|Telemetry Pipeline|OpenTelemetry Collector|0.120.0|Apache 2.0||
+  |Monitoring|Metrics & Alerting|Prometheus|2.53.0|Apache 2.0|TimeSeries DB|
+  |Monitoring|Log Storage|Loki|3.2.2|AGPL-3.0||
+  |Monitoring|Distributed Tracing|Jaeger|1.63.0|Apache 2.0||
+  |Monitoring|Distributed Tracing|Tempo|2.6.0|AGPL-3.0||
+  |Monitoring|Dashboard & Visualization|Grafana|11.3.1|AGPL-3.0||
+  |Monitoring|Traffic Visualization|Kiali|2.11.0|Apache 2.0||
+  |Monitoring|Alert Management|AlertManager|0.25.0|Apache 2.0||
+
 - 배포 가이드
   - [Step1. Namespace 생성 ▷](/doc/kubernetes/namespace.md)
   - [Step2. Istio 배포 ▷](/doc/kubernetes/istio.md)
