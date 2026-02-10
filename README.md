@@ -29,14 +29,7 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
 
 ## 3. Kubernetes 기반 배포 및 가이드
 
-- 환경
-  |시스템|버전|
-  |---|---|
-  |kubernetes|1.32.5|
-  |Istio|1.26.2|
-  |OpenTelemetry|0.120.0|
-
-- 모니터링 인프라 구성
+- 모니터링 인프라 환경 구성
 
   |서비스 그룹|서비스 명|오픈소스 명|버전|라이선스|비고|
   |---|---|---|---|---|---|
