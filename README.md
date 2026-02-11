@@ -44,6 +44,10 @@ ConfigServer, GatewayServer, EurekaServer, EgovAuthor, EgovBoard, EgovCmmnCode, 
   |Monitoring|Traffic Visualization|Kiali|2.11.0|Apache 2.0||
   |Monitoring|Alert Management|AlertManager|0.25.0|Apache 2.0||
 
+  **AGPL-3.0 참고사항**
+  - 해당 오픈소스의 소스코드를 수정 시 소스코드 공개 의무 발생 (GPL-3.0의 변형으로, 네트워크 서비스 제공 시에도 소스 코드 제공을 요구)
+  - 다른 회사 및 외부 고객에게 서비스를 제공하는 경우 소스코드 접근 권리 발생
+
 - 배포 가이드
   - [Step1. Namespace 생성 ▷](/doc/kubernetes/namespace.md)
   - [Step2. Istio 배포 ▷](/doc/kubernetes/istio.md)
