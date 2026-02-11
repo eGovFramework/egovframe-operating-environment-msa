@@ -108,6 +108,7 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
     ![opensearch_dashboard](../images/opensearch_dashboard.png)
     - `http://서버IP:30561` 접속
     - 기본 로그인 정보 : admin/admin
+    - ⚠️ 주의: 기본 설정 비번은 반드시 변경한 후 사용한다.
 
  ---
  <div align="center">
