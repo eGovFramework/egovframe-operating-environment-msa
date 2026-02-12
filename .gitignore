@@ -116,3 +116,5 @@ test-output/
 *.log
 hs_err_pid*
 
+# personal notes
+_*.md
