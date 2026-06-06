@@ -1,5 +1,5 @@
 ---
-apiVersion: opentelemetry.io/v1alpha1
+apiVersion: opentelemetry.io/v1beta1
 kind: Instrumentation
 metadata:
   name: otel-instrumentation
@@ -62,7 +62,7 @@ spec:
 
 ---
 # egov-app 네임스페이스용 Instrumentation
-apiVersion: opentelemetry.io/v1alpha1
+apiVersion: opentelemetry.io/v1beta1
 kind: Instrumentation
 metadata:
   name: otel-instrumentation
