@@ -72,9 +72,15 @@ spec:
         - name: SPRING_RABBITMQ_PORT
           value: "5672"
         - name: SPRING_RABBITMQ_USERNAME
-          value: "guest"
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: SPRING_RABBITMQ_USERNAME
         - name: SPRING_RABBITMQ_PASSWORD
-          value: "guest"
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: SPRING_RABBITMQ_PASSWORD
         livenessProbe:
           httpGet:
             path: /actuator/health

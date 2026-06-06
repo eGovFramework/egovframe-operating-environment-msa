@@ -70,9 +70,15 @@ spec:
         - name: SPRING_RABBITMQ_PORT
           value: "5672"
         - name: SPRING_RABBITMQ_USERNAME
-          value: "guest"
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: SPRING_RABBITMQ_USERNAME
         - name: SPRING_RABBITMQ_PASSWORD
-          value: "guest"
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: SPRING_RABBITMQ_PASSWORD
         - name: APP_OPENAPI_SERVER_URL
           value: "http://localhost:30992"
         volumeMounts:
