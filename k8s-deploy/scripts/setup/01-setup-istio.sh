@@ -9,8 +9,8 @@ NC='\033[0m'
 # 경로 설정
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-ISTIO_DIR="${BASE_DIR}/bin/istio-1.25.0"
-ISTIO_VERSION="1.25.0"
+ISTIO_DIR="${BASE_DIR}/bin/istio-1.26.2"
+ISTIO_VERSION="1.26.2"
 TARGET_ARCH="arm64"
 
 # Istio가 이미 설치되어 있는지 확인
