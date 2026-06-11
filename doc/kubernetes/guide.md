@@ -222,7 +222,7 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
 |Grafana|30002|
 |Jaeger|30003|
 |Prometheus| 30004|
-|AlertManager |30004|
+|AlertManager |31093|
 
 #### 2) Infra / DB
 | 서비스 | 포트 |

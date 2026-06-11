@@ -65,7 +65,7 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
 |Grafana|30002|데이터 시각화 도구|
 |Jaeger|30003|분산추적 시스템|
 |Prometheus| 30004|시스템 모니터링 및 알림 툴킷|
-|AlertManager |30004|Prometheus의 알림 규칙(Alert Rules)을 바탕으로 알림을 전송하는 도구|
+|AlertManager |31093|Prometheus의 알림 규칙(Alert Rules)을 바탕으로 알림을 전송하는 도구|
 
 
 
