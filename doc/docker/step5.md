@@ -26,7 +26,7 @@
         1. docker-compose.yml의 Environment
         2. 각 서비스(로컬)의 application.yml
         3. ConfigServer의 application.yml
-        > 세 파일에 동일한 설정이 존재할 시 제일 마지막에 읽어들이는 설정으로 적용
+      > 세 파일에 동일한 설정이 존재할 시 제일 마지막에 읽어들이는 설정으로 적용
 - 현재 ConfigServer/src/main
 - SPRING_ACTIVE_PROFILE
     ```yaml
@@ -41,11 +41,11 @@
     ```
     - .env파일에서 SPRING_PROFILES_ACTIVE_DEFAULT=docker 로 지정하고 있으므로 docker는 실행 시 applicaiton-'docker'가 포함된 파일을 찾아 읽음
     - ex) EurekaServer를 localhost와 docker를 이용하는 방법
-        - localhost (application-local) - 
-            ```defaultZone: http://localhost:8761/eureka/```
+        - localhost (application-local) -
+          ```defaultZone: http://localhost:8761/eureka/```
         - docker (application--docker) -
-            ```defaultZone: http://eureka-server:8761/eureka/```
-    
+          ```defaultZone: http://eureka-server:8761/eureka/```
+
 ## 2. ConfigServer-config/application-docker.yml 생성
 - ConfigServer의 설정 파일 경로는 Environment(.env)에 작성되어있으므로 설정파일을 다른 디렉토리에 생성 시 해당 경로도 변경 필요함
 ```yaml
@@ -111,21 +111,21 @@ token:
 
 ### 3) EgovMain의 EurekaServer 설정 변경
 - EgovMain은 spring-cloud-config를 사용하지 않아 ConfigServer의 설정을 가져오지 않음.   
-```EgovMain/src/main/resources/application.yml```
+  ```EgovMain/src/main/resources/application.yml```
     ```yaml
     eureka:
         client:
             serviceUrl:
                 defaultZone: http://eureka-server:8761/eureka/ 
     ```
-  1) application.yml에서 localhost로 지정된 url을 eureka-server로 지정
-     - 추가 파일을 생성하지 않아도 되지만 localhost를 이용해 서비스 실행 시 다시 localhost로 url을 변경해주어야 하는 번거로움이 있음
+    1) application.yml에서 localhost로 지정된 url을 eureka-server로 지정
+        - 추가 파일을 생성하지 않아도 되지만 localhost를 이용해 서비스 실행 시 다시 localhost로 url을 변경해주어야 하는 번거로움이 있음
 
-     </br>
-  2) application-docker.yml을 생성하여 위의 코드 작성
-     - 파일을 추가해야하지만 local과 docker 실행 둘 다 대응할 수 있음
+       </br>
+    2) application-docker.yml을 생성하여 위의 코드 작성
+        - 파일을 추가해야하지만 local과 docker 실행 둘 다 대응할 수 있음
 
-     </br>
+       </br>
 
 - 수정 후 build 진행
     - `./build.sh EgovMain`
@@ -141,30 +141,30 @@ token:
 2. make 명령어
     1) make 명령어 다운로드 : ```sudo apt install make```
     2) 수동 다운로드 : [makeGNU](https://gnuwin32.sourceforge.net/packages/make.htm)   
-        *Window의 경우 환경변수에 Path 등록
+       *Window의 경우 환경변수에 Path 등록
     3) 실행 : ```make start```
 
 ## 4. 실행결과 확인
 - **EurekaServer (localhost:8761)**   
-![eureka-list](./images//eureka-list.png)   
+  ![eureka-list](../images/eureka-list.png)
 - **ConfigServer (localhost:8888)**   
-![configserver](./images/configserver.png)
+  ![configserver](../images/configserver.png)
     - token 값이 출력되는지 확인 필요
-    - token값이 출력되지 않거나 accessToken 관련 null 에러가 생기는 경우 ConfigServer와 연결이 제대로 이루어지지 않았을 수 있음   
+    - token값이 출력되지 않거나 accessToken 관련 null 에러가 생기는 경우 ConfigServer와 연결이 제대로 이루어지지 않았을 수 있음
 
 
 - **GatewayServer (localhost:9000)**   
-![gatewayserver-main](./images/gatewayserver.png)
+  ![gatewayserver-main](../images/gatewayserver.png)
     - 로그인 테스트
-        |구분 | 아이디 | 비밀번호 |
-        |---|---|---|
-        |일반사용자|USER|rhdxhd12|
-        |기업사용자|ENTERPRISE|rhdxhd12|
-        |업무사용자|TEST1|rhdxhd12|
+      |구분 | 아이디 | 비밀번호 |
+      |---|---|---|
+      |일반사용자|USER|rhdxhd12|
+      |기업사용자|ENTERPRISE|rhdxhd12|
+      |업무사용자|TEST1|rhdxhd12|
     - 로그인이 되지 않는 경우 DB에 테이블과 데이터 구성이 되어있는지 확인
-- **docker 명령어를 이용해 확인**   
+- **docker 명령어를 이용해 확인**
     - ```docker ps -a```   
-        ![docker_ps_list](./images/docker_ps.png)
+      ![docker_ps_list](../images/docker_ps.png)
         - 해당 명령어는 컨테이너에서 실행된 서비스를 보여주는 기능으로 에러 발생 시 실제 오류 로그 확인 필요
         - ```docker logs <Container ID>```
         - 또는 docker-desktop에서 문제가 있는 container 로그 확인

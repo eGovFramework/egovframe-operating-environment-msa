@@ -17,11 +17,11 @@
 ## 서비스 빌드
 ### 1. 영구 저장소로 사용할 데이터 디렉토리 생성
 - ```start.sh``` 를 통해 서비스를 실행하는 경우 사용할 서비스 등록 (mysql, opensearch, rabbitmq)
-- 데이터 디렉토리 생성   
+- 데이터 디렉토리 생성
     ```bash
     mkdir -p k8s-deploy/data/{mysql,opensearch,rabbitmq}
     ```
-- 권한 설정   
+- 권한 설정
     ```bash
     chmod -R 777 k8s-deploy/data
     ```
@@ -49,8 +49,8 @@
     ```
     - config-file : ConfigServer에 대한 설정파일이 있는 경로
     - default_path : cloud를 통한 연결 시 실제 config 위치   
-        ```ConfigServer/src/main/resources/application.yml``` 수정
-    
+      ```ConfigServer/src/main/resources/application.yml``` 수정
+
 - EgovSearch password 검증
     ```sh
     validate_egovsearch_password() {
@@ -149,7 +149,7 @@
 
 ### 3. 빌드 후 내부 디렉토리
 - 각 서비스별 내부에 target 폴더 생성 확인   
-    ![target](./images/target.png)
+  ![target](../images/target.png)
 
 ---
 
