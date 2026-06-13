@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # [1] 설정
 REPO_URL="https://github.com/eGovFramework/egovframe-common-components-msa-krds"
@@ -26,12 +27,19 @@ DIRS=(
 # [3] 임시 디렉토리로 소스 다운로드 및 압축 해제
 echo "[INFO] Downloading source from GitHub..."
 mkdir -p "$TMP_DIR"
-curl -L "$REPO_URL/archive/refs/tags/$TAG.zip" -o "$TMP_DIR/source.zip"
+if ! curl -fL "$REPO_URL/archive/refs/tags/$TAG.zip" -o "$TMP_DIR/source.zip"; then
+  echo "[ERROR] 소스 다운로드 실패: $REPO_URL ($TAG)"
+  exit 1
+fi
 
 echo "[INFO] Extracting..."
 unzip -q "$TMP_DIR/source.zip" -d "$TMP_DIR"
 
 EXTRACTED_DIR="$TMP_DIR/egovframe-common-components-msa-krds-${TAG#v}"
+if [ ! -d "$EXTRACTED_DIR" ]; then
+  echo "[ERROR] 압축 해제된 디렉토리를 찾을 수 없습니다: $EXTRACTED_DIR"
+  exit 1
+fi
 
 # [4] 현재 디렉토리로 필요한 디렉토리 복사
 for dir in "${DIRS[@]}"; do
