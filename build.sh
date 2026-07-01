@@ -65,7 +65,10 @@ build_service() {
     fi
     
     echo "Building $service..."
-    cd $service && mvn clean package && cd ..
+    if ! ( cd "$service" && mvn clean package ); then
+        echo "Error: 빌드 실패 - $service"
+        return 1
+    fi
 }
 
 # 인자가 있는 경우 해당 서비스만 빌드
@@ -89,8 +92,13 @@ if [ $# -eq 1 ]; then
     fi
 else
     # 인자가 없는 경우 모든 서비스 빌드
+    failed=0
     for service in "${services[@]}"; do
-        build_service "$service"
+        build_service "$service" || failed=1
     done
+    if [ "$failed" -ne 0 ]; then
+        echo "Error: 일부 서비스 빌드에 실패했습니다."
+        exit 1
+    fi
     echo "All services have been built"
 fi

@@ -24,16 +24,16 @@ services=(
 stop_service() {
     local service=$1
     echo "Stopping $service..."
-    pid=$(pgrep -f $service)
-    if [ ! -z "$pid" ]; then
+    pid=$(pgrep -f "$service" || true)
+    if [ -n "$pid" ]; then
         # 정상 종료 시도
-        kill $pid
+        kill $pid 2>/dev/null || true
         sleep 2
-        
+
         # 여전히 실행 중이면 강제 종료
-        if ps -p $pid > /dev/null; then
+        if kill -0 $pid 2>/dev/null; then
             echo "Force stopping $service..."
-            kill -9 $pid
+            kill -9 $pid 2>/dev/null || true
         fi
         echo "$service stopped"
     else
