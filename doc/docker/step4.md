@@ -18,22 +18,22 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
     docker build -t opensearch-with-nori:2.15.0 -f Dockerfile.opensearch-with-nori .
     ```   
     - build 결과   
-        ![egovsearch_image_build](./images/opensearch-with-nori.png)
+      ![egovsearch_image_build](../images/opensearch-with-nori.png)
     - docker-desktop상 image가 추가되었는지 확인
-        ![docker-image_opensearch-with-nori](./images/docker-opensearch-image.png)
+      ![docker-image_opensearch-with-nori](../images/docker-opensearch-image.png)
 
 
 ## 3. 서비스 이미지 빌드
-- 단일 도커 이미지 빌드 
+- 단일 도커 이미지 빌드
     ```bash
     ./docker-build.sh <빌드할 프로젝트명>
     ```
 
-- 전체 도커 이미지 빌드   
+- 전체 도커 이미지 빌드
     ```bash
     ./docker-build.sh
     ```
-    ```docker-build.sh```
+  ```docker-build.sh```
     - 빌드할 서비스 이미지 배열 등록
         ```bash
         services=(
@@ -51,11 +51,11 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
             "EgovSearch"
         )
         ```
-        - 아래의 서비스는 필요한 경우에 등록 
+        - 아래의 서비스는 필요한 경우에 등록
             - EgovHello : 샘플 서비스
             - EgovMobileId : 모바일신분증 관련 설정 필요
             - EgovSearch : EgovSearch 서버 구성 및 설정 필요   
-            *EgovMobileId 와 EgovSearch의 경우 각 프로젝트 내 Readme를 참고해 설정 구성을 진행할 수 있음
+              *EgovMobileId 와 EgovSearch의 경우 각 프로젝트 내 Readme를 참고해 설정 구성을 진행할 수 있음
 
     - 디렉토리 존재 확인
         ```bash
@@ -66,7 +66,7 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
         fi
         ```
         - 서비스 디렉토리가 실제로 import 되어있는지 확인
-        - 서비스 Import가 제대로 되지 않은 경우 [Step2. 프로젝트 준비](/step2.md) 참고
+        - 서비스 Import가 제대로 되지 않은 경우 [Step2. 프로젝트 준비](step2.md) 참고
 
     - JAR 파일 존재 확인 (build 성공 여부)
         ```bash
@@ -77,7 +77,7 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
         fi
         ```
         - 각 프로젝트 서비스에 target 폴더가 생성되었는지 확인한다.
-        - 프로젝트 빌드를 진행하지 않은 경우 [Step3. 프로젝트 빌드](/step3.md) 참고
+        - 프로젝트 빌드를 진행하지 않은 경우 [Step3. 프로젝트 빌드](step3.md) 참고
 
     - 도커 이미지 빌드
         ```bash
@@ -133,12 +133,12 @@ OpenSearch 한글 형태소 분석기(Opensearch-with-nori) 설치
                 ```
     - 이미지 빌드 결과 확인
         - 빌드 후 출력되는 결과
-            ![docker-image-build-shell](./images/docker-image-build.png)   
+          ![docker-image-build-shell](../images/docker-image-build.png)
             - 명령어를 통해서도 확인 가능   
-                ```docker images | grep latest```
+              ```docker images | grep latest```
 
         - docker-desktop   
-            ![docker_image_docker-desktop](./images/docker_image_docekr-desktop.png)
+          ![docker_image_docker-desktop](../images/docker_image_docekr-desktop.png)
 
 ---
 

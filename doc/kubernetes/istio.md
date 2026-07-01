@@ -2,7 +2,7 @@
 ### 1) Istio 설치
 
 - Kubernetes-Istio 호환 버전 확인
-    ![istio_version](/images/istio_version.png)
+  ![istio_version](../images/istio_version.png)
 
 - Kubernetes에서 지원되는 버전을 사용해야함
     - 프로젝트의 버전 구성
@@ -20,8 +20,8 @@
         - MAC/Linux인 경우 : arm64
         - Window인 경우 : amd64
     - 버전 지정하지 않는 경우 최신 버전 다운로드됨
-- istio 설치 : 
-    `istioctl install --set profile=default -y `
+- istio 설치 :
+  `istioctl install --set profile=default -y `
 - 설치 확인 : `istioctl version`
 
 ### 2) Istio 구성
@@ -49,8 +49,8 @@
             egov-infra  gateway-server-7584c4ccb6-7sc6l     2/2     Running
                         rabbitmq-7f757db777-z77cz           2/2     Running
             ```
-            2/2 중에 1개는 실행될 서비스, 남은 하나가 envoy-proxy이다.   
-            egov-db의 경우 istio-injection이 주입되지않았으므로 1/1인 상태
+          2/2 중에 1개는 실행될 서비스, 남은 하나가 envoy-proxy이다.   
+          egov-db의 경우 istio-injection이 주입되지않았으므로 1/1인 상태
 
 
 3. Telemetry 설정 적용

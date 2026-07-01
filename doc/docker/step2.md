@@ -23,7 +23,7 @@
     ```
 
 ## 2. 내부 디렉토리 구조 확인
-![dir_tree](./images/dir.png)
+![dir_tree](../images/dir.png)
 ```text
 docker-deploy                 ## 도커 배포 관련 폴더
 EgovHello                     ## Kubernetes-Istio용 프로젝트 
@@ -55,9 +55,9 @@ stop.sh                       ## 로컬 서비스 정지
     TMP_DIR="./common-components-msa-temp"
     echo "Import Project - egovframe-common-components-msa $TAG"
     ```
-    - REPO_URL = Import할 github Repository
-    - TAG : 레포지토리의 릴리즈 버전(현재 최신 릴리즈)
-    - TMP_DIR : 임시 디렉토리가 생성될 폴더 경로 
+  - REPO_URL = Import할 github Repository
+  - TAG : 레포지토리의 릴리즈 버전(현재 최신 릴리즈)
+  - TMP_DIR : 임시 디렉토리가 생성될 폴더 경로
 
 - 지정한 레포지토리에서 복사할 디렉토리 선정
     ```sh
@@ -114,21 +114,21 @@ stop.sh                       ## 로컬 서비스 정지
         echo "[DONE] All selected components have been copied."
     ```
 
-### 2. Import 후 내부 디렉토리 구조   
-![import_msa_project](./images/import_after.png)
+### 2. Import 후 내부 디렉토리 구조
+![import_msa_project](../images/import_after.png)
 - 추가된 프로젝트
-    - ConfigServer
-    - EgovAuthor
-    - EgovBoard
-    - EgovCmmnCode
-    - EgovLogin
-    - EgovMain
-    - EgovMobileId
-    - EgovQuestionnarie
-    - EgovSearch
-    - EgovSearch-Config
-    - EurekaServer
-    - GatewayServer
+  - ConfigServer
+  - EgovAuthor
+  - EgovBoard
+  - EgovCmmnCode
+  - EgovLogin
+  - EgovMain
+  - EgovMobileId
+  - EgovQuestionnarie
+  - EgovSearch
+  - EgovSearch-Config
+  - EurekaServer
+  - GatewayServer
 
 ### 프로젝트가 제대로 빌드되지 않은 경우
 - ```clear_msa_project.sh``` 를 통해 초기화 후 다시 import
