@@ -24,6 +24,8 @@ echo -e "${YELLOW}Starting CICD cleanup process...${NC}"
 # Jenkins 제거
 echo -e "\n${YELLOW}Removing Jenkins...${NC}"
 kubectl delete serviceaccount jenkins-sa -n egov-cicd --ignore-not-found=true
+kubectl delete role jenkins-role -n egov-cicd --ignore-not-found=true
+kubectl delete rolebinding jenkins-role-binding -n egov-cicd --ignore-not-found=true
 kubectl delete clusterrole jenkins-cluster-role --ignore-not-found=true
 kubectl delete clusterrolebinding jenkins-cluster-role-binding --ignore-not-found=true
 kubectl delete statefulset jenkins -n egov-cicd --ignore-not-found=true

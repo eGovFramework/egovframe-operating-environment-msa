@@ -24,10 +24,22 @@ echo "- Kiali:   admin/admin"
 echo -e "\n${GREEN}AlertManager Access:${NC}"
 echo "kubectl port-forward svc/alertmanager -n egov-monitoring 9093:9093"
 
-# CICD 접근 정보
-echo -e "\n${BLUE}[CICD]${NC}"
-echo -e "${GREEN}1. Jenkins:${NC}"
-echo "- Web UI: http://localhost:30011"
+# CICD 접근 정보 (ClusterIP + port-forward)
+echo -e "\n${BLUE}[CICD] (optional, --with-cicd)${NC}"
+if kubectl get namespace egov-cicd >/dev/null 2>&1; then
+    echo -e "${GREEN}Start port-forward:${NC}"
+    echo "  k8s-deploy/scripts/utils/cicd-port-forward.sh start"
+    echo -e "${GREEN}URLs (after port-forward):${NC}"
+    echo "- Jenkins:   http://localhost:30011"
+    echo "- SonarQube: http://localhost:30013"
+    echo "- Nexus:     http://localhost:30014"
+    if kubectl get statefulset gitlab -n egov-cicd >/dev/null 2>&1; then
+        echo "- GitLab:    http://localhost:30012"
+    fi
+else
+    echo "- CI/CD not installed. Run: k8s-deploy/scripts/setup/05-setup-cicd.sh"
+    echo "  or: ./setup.sh --with-cicd"
+fi
 
 # 데이터베이스 접근 정보
 echo -e "\n${BLUE}[Databases]${NC}"

@@ -9,6 +9,19 @@ NC='\033[0m'
 # 현재 스크립트 디렉토리
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# CI/CD 선택 설치 (--with-cicd 플래그 또는 INSTALL_CICD=true)
+INSTALL_CICD=false
+for arg in "$@"; do
+    case "${arg}" in
+        --with-cicd)
+            INSTALL_CICD=true
+            ;;
+    esac
+done
+if [ "${INSTALL_CICD_ENV:-}" = "true" ]; then
+    INSTALL_CICD=true
+fi
+
 # Kubernetes 클러스터 상태 확인 함수
 check_kubernetes() {
     echo -e "${YELLOW}Checking Kubernetes cluster status...${NC}"
@@ -252,10 +265,14 @@ check_opensearch
 check_postgresql
 check_redis
 
-# 5. CICD 설정
-echo -e "\n${YELLOW}[5/7] Setting up CICD...${NC}"
-${SCRIPT_DIR}/05-setup-cicd.sh
-check_error "CICD setup"
+# 5. CICD 설정 (선택: --with-cicd)
+if [ "${INSTALL_CICD}" = "true" ]; then
+    echo -e "\n${YELLOW}[5/7] Setting up CICD...${NC}"
+    ${SCRIPT_DIR}/05-setup-cicd.sh
+    check_error "CICD setup"
+else
+    echo -e "\n${YELLOW}[5/7] Skipping CICD (optional). Use --with-cicd to install.${NC}"
+fi
 
 # 6. Infrastructure 설정
 echo -e "\n${YELLOW}[6/7] Setting up Infrastructure...${NC}"

@@ -124,9 +124,8 @@ spec:
           value: "-Xms512m -Xmx2g -XX:MaxDirectMemorySize=2g -Djava.util.prefs.userRoot=/nexus-data/javaprefs"
       volumes:
       - name: nexus-data
-        hostPath:
-          path: /Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/nexus
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: nexus-pvc-local
       securityContext:
         fsGroup: 200
 
@@ -152,11 +151,10 @@ metadata:
   name: nexus
   namespace: egov-cicd
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 8081
       targetPort: 8081
-      nodePort: 30014
   selector:
     app: nexus
     statefulset.kubernetes.io/pod-name: nexus-0

@@ -97,9 +97,8 @@ spec:
           mountPath: /opt/sonarqube/data
       volumes:
       - name: sonarqube-data
-        hostPath:
-          path: /Users/chrisyoon/Projects/egovframe/egovframe-common-components-msa-krds/k8s-deploy/data/sonarqube
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: sonarqube-pvc-local
 
 ---
 
@@ -109,10 +108,9 @@ metadata:
   name: sonarqube
   namespace: egov-cicd
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 9000
       targetPort: 9000
-      nodePort: 30013
   selector:
     app: sonarqube

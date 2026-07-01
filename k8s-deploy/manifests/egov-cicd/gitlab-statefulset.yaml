@@ -93,13 +93,14 @@ spec:
         - -c
         - |
           mkdir -p /var/opt/gitlab/gitlab-workhorse/sockets
-          chmod -R 777 /var/opt/gitlab/gitlab-workhorse
+          chmod -R 775 /var/opt/gitlab/gitlab-workhorse
         volumeMounts:
         - name: gitlab-workhorse
           mountPath: /var/opt/gitlab/gitlab-workhorse
       containers:
       - name: gitlab
         image: gitlab/gitlab-ce:16.10.1-ce.0
+        # GitLab CE 단일 Pod 구성은 privileged가 필요할 수 있음 (로컬 학습용)
         securityContext:
           privileged: true
         ports:
@@ -133,26 +134,26 @@ spec:
       volumes:
       - name: gitlab-config
         hostPath:
-          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/config
+          path: /your/local/path/k8s-deploy/data/gitlab/config
           type: DirectoryOrCreate
       - name: gitlab-config-file
         configMap:
           name: gitlab-config
       - name: gitlab-logs
         hostPath:
-          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/logs
+          path: /your/local/path/k8s-deploy/data/gitlab/logs
           type: DirectoryOrCreate
       - name: gitlab-data
         hostPath:
-          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/data
+          path: /your/local/path/k8s-deploy/data/gitlab/data
           type: DirectoryOrCreate
       - name: gitlab-workhorse
         hostPath:
-          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/workhorse
+          path: /your/local/path/k8s-deploy/data/gitlab/workhorse
           type: DirectoryOrCreate
       - name: ssh-host-keys
         hostPath:
-          path: /mnt/host/c/Users/comgh/egovframe-common-components-msa-krds/k8s-deploy/data/gitlab/ssh
+          path: /your/local/path/k8s-deploy/data/gitlab/ssh
           type: DirectoryOrCreate
 
 ---
@@ -177,12 +178,11 @@ metadata:
   name: gitlab
   namespace: egov-cicd
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: http
       port: 80
       targetPort: 80
-      nodePort: 30012
     - name: https
       port: 443
       targetPort: 443

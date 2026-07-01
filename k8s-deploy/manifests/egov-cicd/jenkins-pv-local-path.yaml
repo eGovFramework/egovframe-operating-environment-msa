@@ -1,0 +1,14 @@
+# Jenkins 로컬 데이터용 PVC (local-path StorageClass)
+# Docker Desktop K8S 등 로컬 환경에서 hostPath 대신 사용합니다.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc-local
+  namespace: egov-cicd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-path

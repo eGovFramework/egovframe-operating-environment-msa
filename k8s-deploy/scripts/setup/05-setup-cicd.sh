@@ -49,15 +49,26 @@ wait_for_resource() {
 echo -e "\n${YELLOW}Creating egov-cicd namespace...${NC}"
 kubectl create namespace egov-cicd 2>/dev/null || true
 
+# 로컬 PVC 생성 (local-path StorageClass)
+echo -e "\n${YELLOW}Creating local PVCs for CI/CD...${NC}"
+kubectl apply -f ${BASE_DIR}/manifests/egov-cicd/jenkins-pv-local-path.yaml
+kubectl apply -f ${BASE_DIR}/manifests/egov-cicd/nexus-pv-local-path.yaml
+kubectl apply -f ${BASE_DIR}/manifests/egov-cicd/sonarqube-pv-local-path.yaml
+check_error "CI/CD PVC creation"
+
 # Jenkins StatefulSet 배포
 echo -e "\n${YELLOW}Deploying Jenkins StatefulSet...${NC}"
 kubectl apply -f ${BASE_DIR}/manifests/egov-cicd/jenkins-statefulset.yaml
 check_error "Jenkins statefulset deployment"
 
-# GitLab 설치
-echo -e "\n${YELLOW}Installing GitLab...${NC}"
-kubectl apply -f ${BASE_DIR}/manifests/egov-cicd/gitlab-statefulset.yaml
-check_error "GitLab installation"
+# GitLab 설치 (선택: gitlab-statefulset.yaml hostPath를 로컬 경로로 수정 후 사용)
+if [ "${INSTALL_GITLAB:-false}" = "true" ]; then
+    echo -e "\n${YELLOW}Installing GitLab...${NC}"
+    kubectl apply -f ${BASE_DIR}/manifests/egov-cicd/gitlab-statefulset.yaml
+    check_error "GitLab installation"
+else
+    echo -e "\n${YELLOW}Skipping GitLab (privileged). Set INSTALL_GITLAB=true to install.${NC}"
+fi
 
 # SonarQube 설치
 echo -e "\n${YELLOW}Installing SonarQube...${NC}"
@@ -72,7 +83,9 @@ check_error "Nexus installation"
 # 리소스 준비 대기
 echo -e "\n${YELLOW}Waiting for CICD resources to be ready...${NC}"
 wait_for_resource statefulset jenkins egov-cicd 300
-wait_for_resource statefulset gitlab egov-cicd 300
+if [ "${INSTALL_GITLAB:-false}" = "true" ]; then
+    wait_for_resource statefulset gitlab egov-cicd 300
+fi
 wait_for_resource deployment sonarqube egov-cicd 300
 wait_for_resource statefulset nexus egov-cicd 300
 
@@ -82,12 +95,15 @@ kubectl exec -n egov-cicd jenkins-0 -- cat /var/jenkins_home/secrets/initialAdmi
 
 # 설치 완료 메시지 및 접근 정보
 echo -e "\n${GREEN}CICD setup completed successfully!${NC}"
-echo -e "\n${BLUE}Access Information:${NC}"
+echo -e "\n${BLUE}Access Information (port-forward required):${NC}"
+echo -e "Run: ${BASE_DIR}/scripts/utils/cicd-port-forward.sh start"
+echo -e ""
 echo -e "Jenkins:   http://localhost:30011"
-echo -e "GitLab:    http://localhost:30012"
+if [ "${INSTALL_GITLAB:-false}" = "true" ]; then
+    echo -e "GitLab:    http://localhost:30012"
+fi
 echo -e "SonarQube: http://localhost:30013"
 echo -e "Nexus:     http://localhost:30014"
 
 echo -e "\n${YELLOW}Please check the status of all pods:${NC}"
 kubectl get pods -n egov-cicd
-
