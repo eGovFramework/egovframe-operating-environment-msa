@@ -985,14 +985,14 @@ spec:
 - providers 정의는 `/manifests/egov-istio/config.yaml` 파일에서 설정
 - Istio는 애플리케이션 내부 로그까지는 관여하지 않고, 요청/응답 시간, 상태코드, 바이트 수, Trace, Metrics 등을 수집할 수 있다.
 
-##### accessLogging
+#### accessLogging
 - `otel-loki`는 ConfigMap의 `data.mesh.extensionProviders` 에 정의된 OpenTelemetry 기반 로그 수집기이다.
 - OpenTelemetry Collector -> Loki로 로그를 전송하는 데 사용된다.
 - 즉, 이 설정은 Istio Proxy가 수집한 HTTP Access Log를 Loki로 보내도록 설정한 것이다.
-##### tracing
+#### tracing
 - `randomSamplingPercentage: 100.0`은 모든 요청에 대해 추적을 수행
 - Jaeger 또는 OpenTelemetry Collector 를 통해 수집되어 시각화된다.
-##### metrics
+#### metrics
 - `prometheus`는 Istio에서 기본 제공하는 메트릭 제공자이다.
 - 이 설정을 통해 Prometheus가 Envoy Proxy의 메트릭을 스크래핑할 수 있게 된다.
 
