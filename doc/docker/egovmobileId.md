@@ -1,6 +1,6 @@
 # EgovMobileId 설정
 
-###  `docker-deploy/docker-compose.yml`
+##  `docker-deploy/docker-compose.yml`
     ```
     egov-mobileid:
         environment:
@@ -33,7 +33,7 @@
         └── sp.did
     ```
 
-### `EgovMobileId/config`
+## `EgovMobileId/config`
 
 - `verifyConfig-docker.json` 설정
     ```json
@@ -60,9 +60,9 @@
     }
     ```
 
-### 필수 파일 구성
+## 필수 파일 구성
 - `sp.wallet`: 전자지갑 파일
 - `sp.did`: DID 파일
 
-### 비고
+## 비고
 모바일신분증 개발을 위해서는 모바일 신분증 지원센터에 서비스를 접수하고 운영용 Wallet과 DID를 받는 등의 절차가 필요하므로 자세한 사항은 [EgovMoibileId_README](https://github.com/eGovFramework/egovframe-common-components-msa-krds/tree/main/EgovMobileId) 참조

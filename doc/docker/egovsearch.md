@@ -1,5 +1,5 @@
 # EgovSearch 설정
-### `docker-deploy/docker-compose.yml`
+## `docker-deploy/docker-compose.yml`
 ```
   egov-search:
     environment:
@@ -75,6 +75,6 @@ RUN echo '#!/bin/sh' > /app/start.sh && \
 
 ...
 ```
-### 비고
+## 비고
 EgovSearch 서비스를 사용하기 위해서는 OpenSearch 서버가 구성되어있어야합니다.   
 관련 사항은 [EgovSearch_REAMDME](https://github.com/eGovFramework/egovframe-common-components-msa-krds/tree/main/EgovSearch) 참조
