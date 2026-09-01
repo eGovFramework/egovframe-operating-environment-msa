@@ -39,9 +39,9 @@ check_service() {
     if [ ! -z "$pid" ]; then
         echo -e "${GREEN}✓ $service is running (PID: $pid)${NC}"
         
-        # PID 기반 로그 파일 확인
-        local log_file="logs/${service}_${pid}.log"
-        if [ -f "$log_file" ]; then
+        # 가장 최근 로그 파일 확인 (start.sh 가 logs/<service>_<timestamp>.log 로 기록한다)
+        local log_file=$(ls -t "logs/${service}"_*.log 2>/dev/null | head -n 1)
+        if [ -n "$log_file" ]; then
             local errors=$(tail -n 50 "$log_file" | grep -i "error" | wc -l)
             if [ $errors -gt 0 ]; then
                 echo -e "${YELLOW}  ⚠ Found $errors recent errors in log${NC}"
