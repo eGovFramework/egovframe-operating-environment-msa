@@ -26,7 +26,7 @@ echo -e "${GREEN}Removing RabbitMQ ConfigMap...${NC}"
 kubectl delete -f ../../manifests/egov-infra/rabbitmq-configmap.yaml 2>/dev/null || true
 
 echo -e "${GREEN}Removing RabbitMQ PV and PVC...${NC}"
-kubectl delete -f ../../manifests/egov-infra/rabbitmq-pv.yaml 2>/dev/null || true
+kubectl delete -f ../../manifests/egov-infra/rabbitmq-pv-nfs.yaml 2>/dev/null || true
 
 # PVC가 Terminating 상태인 경우 강제 삭제
 if kubectl get pvc rabbitmq-pvc -n egov-infra 2>/dev/null | grep Terminating; then

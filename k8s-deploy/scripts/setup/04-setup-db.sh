@@ -12,7 +12,7 @@ setup_mysql() {
 
     # MySQL 리소스 생성
     echo -e "${GREEN}Creating MySQL resources...${NC}"
-    kubectl apply -f ../../manifests/egov-db/mysql-pv.yaml
+    kubectl apply -f ../../manifests/egov-db/mysql-pv-nfs.yaml
 
     # PVC 바인딩 상태 확인
     echo -e "${YELLOW}Waiting for MySQL PVC to be bound...${NC}"
@@ -50,7 +50,7 @@ setup_opensearch() {
 
     # OpenSearch 리소스 생성
     echo -e "${GREEN}Creating OpenSearch resources...${NC}"
-    kubectl apply -f ../../manifests/egov-db/opensearch-pv.yaml
+    kubectl apply -f ../../manifests/egov-db/opensearch-pv-nfs.yaml
 
     # PVC 바인딩 상태 확인
     echo -e "${YELLOW}Waiting for OpenSearch PVC to be bound...${NC}"
@@ -96,7 +96,7 @@ setup_postgresql() {
     echo -e "${GREEN}Creating PostgreSQL resources...${NC}"
 
     # PV/PVC 생성
-    kubectl apply -f ../../manifests/egov-db/postgresql-pv.yaml
+    kubectl apply -f ../../manifests/egov-db/postgresql-pv-nfs.yaml
 
     # PVC 바인딩 상태 확인
     echo -e "${YELLOW}Waiting for PostgreSQL PVC to be bound...${NC}"
@@ -123,7 +123,7 @@ setup_redis() {
     echo -e "${GREEN}Creating Redis resources...${NC}"
 
     # PV/PVC 생성
-    kubectl apply -f ../../manifests/egov-db/redis-pv.yaml
+    kubectl apply -f ../../manifests/egov-db/redis-pv-nfs.yaml
 
     # PVC 바인딩 상태 확인
     echo -e "${YELLOW}Waiting for Redis PVC to be bound...${NC}"

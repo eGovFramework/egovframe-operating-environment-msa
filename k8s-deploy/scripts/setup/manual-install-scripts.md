@@ -126,14 +126,14 @@ vagrant ssh control-plane1 -c "sudo tar -xzf /tmp/EgovMobileId-config.tar.gz -C 
 # PV 및 PVC 파일 수정
 cd /{프로젝트 경로}/k8s-deploy/manifests
 # 다음 PV, PVC 파일에서 nfs 서버 주소, path를 확인/수정한다.
-egov-monitoring/prometheus-pv.yaml
-egov-db/mysql-pv.yaml
-egov-db/opensearch-pv.yaml
-egov-db/postgresql-pv.yaml
-egov-db/redis-pv.yaml
-egov-infra/rabbitmq-pv.yaml
-egov-app/egov-mobileid-pv.yaml
-egov-app/egov-search-pv.yaml
+egov-monitoring/prometheus-pv-nfs.yaml
+egov-db/mysql-pv-nfs.yaml
+egov-db/opensearch-pv-nfs.yaml
+egov-db/postgresql-pv-nfs.yaml
+egov-db/redis-pv-nfs.yaml
+egov-infra/rabbitmq-pv-nfs.yaml
+egov-app/egov-mobileid-pv-nfs.yaml
+egov-app/egov-search-pv-nfs.yaml
 
 # 다음 파일에서 persistentVolumeClaim 명을 확인/수정한다.
 egov-monitoring/prometheus.yaml
@@ -362,7 +362,7 @@ kubectl wait --for=condition=Ready pods --all -n egov-monitoring --timeout=300s
 
 ```bash
 cd ../egov-db
-kubectl apply -f mysql-pv.yaml
+kubectl apply -f mysql-pv-nfs.yaml
 kubectl apply -f mysql.yaml
 kubectl rollout status statefulset/mysql -n egov-db --timeout=600s
 ```
@@ -370,7 +370,7 @@ kubectl rollout status statefulset/mysql -n egov-db --timeout=600s
 ## 6. OpenSearch 설치
 
 ```bash
-kubectl apply -f opensearch-pv.yaml
+kubectl apply -f opensearch-pv-nfs.yaml
 kubectl apply -f opensearch.yaml
 kubectl apply -f opensearch-dashboard.yaml
 kubectl rollout status statefulset/opensearch -n egov-db --timeout=300s
@@ -382,7 +382,7 @@ kubectl rollout status deployment/opensearch-dashboards -n egov-db --timeout=300
 ```bash
 cd ../egov-infra
 kubectl apply -f rabbitmq-configmap.yaml
-kubectl apply -f rabbitmq-pv.yaml
+kubectl apply -f rabbitmq-pv-nfs.yaml
 kubectl apply -f rabbitmq-deployment.yaml
 kubectl apply -f rabbitmq-service.yaml
 kubectl rollout status deployment/rabbitmq -n egov-infra --timeout=300s
@@ -400,8 +400,8 @@ kubectl get secret mysql-secret -n egov-db -o yaml | sed 's/namespace: egov-db/n
 
 ### PV 및 PVC 생성
 ```bash
-kubectl apply -f egov-mobileid-pv.yaml
-kubectl apply -f egov-search-pv.yaml
+kubectl apply -f egov-mobileid-pv-nfs.yaml
+kubectl apply -f egov-search-pv-nfs.yaml
 ```
 
 ### 각 서비스 배포
