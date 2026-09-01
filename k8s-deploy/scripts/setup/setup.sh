@@ -10,7 +10,7 @@ NC='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # CI/CD 선택 설치 (--with-cicd 플래그 또는 INSTALL_CICD=true)
-INSTALL_CICD=false
+INSTALL_CICD="${INSTALL_CICD:-false}"
 for arg in "$@"; do
     case "${arg}" in
         --with-cicd)
@@ -18,9 +18,6 @@ for arg in "$@"; do
             ;;
     esac
 done
-if [ "${INSTALL_CICD_ENV:-}" = "true" ]; then
-    INSTALL_CICD=true
-fi
 
 # Kubernetes 클러스터 상태 확인 함수
 check_kubernetes() {
