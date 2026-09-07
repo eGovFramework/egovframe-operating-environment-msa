@@ -23,7 +23,7 @@ echo -e "${GREEN}Creating RabbitMQ ConfigMap...${NC}"
 kubectl apply -f ../../manifests/egov-infra/rabbitmq-configmap.yaml
 
 echo -e "${GREEN}Creating RabbitMQ PV and PVC...${NC}"
-kubectl apply -f ../../manifests/egov-infra/rabbitmq-pv.yaml
+kubectl apply -f ../../manifests/egov-infra/rabbitmq-pv-nfs.yaml
 
 echo -e "${GREEN}Creating RabbitMQ Deployment...${NC}"
 kubectl apply -f ../../manifests/egov-infra/rabbitmq-deployment.yaml

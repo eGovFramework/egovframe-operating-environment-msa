@@ -42,11 +42,11 @@ kubectl get secret mysql-secret -n egov-db -o yaml | sed 's/namespace: egov-db/n
 
 # MobileId PV/PVC 생성
 echo -e "${GREEN}Creating MobileId PV and PVC...${NC}"
-kubectl apply -f "../../manifests/egov-app/egov-mobileid-pv.yaml"
+kubectl apply -f "../../manifests/egov-app/egov-mobileid-pv-nfs.yaml"
 
 # EgovSearch PV/PVC 생성
 echo -e "${GREEN}Creating EgovSearch PV and PVC...${NC}"
-kubectl apply -f "../../manifests/egov-app/egov-search-pv.yaml"
+kubectl apply -f "../../manifests/egov-app/egov-search-pv-nfs.yaml"
 
 # 각 서비스 배포
 SERVICES=(

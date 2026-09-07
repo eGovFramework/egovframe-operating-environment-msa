@@ -27,7 +27,7 @@ kubectl delete -f ../../manifests/egov-monitoring/jaeger.yaml 2>/dev/null
 kubectl delete -f ../../manifests/egov-monitoring/opentelemetry-collector.yaml 2>/dev/null
 
 # Prometheus PV/PVC 제거
-kubectl delete -f ../../manifests/egov-monitoring/prometheus-pv.yaml 2>/dev/null
+kubectl delete -f ../../manifests/egov-monitoring/prometheus-pv-nfs.yaml 2>/dev/null
 
 # OpenTelemetry Operator 제거
 echo -e "${YELLOW}Removing OpenTelemetry Operator...${NC}"

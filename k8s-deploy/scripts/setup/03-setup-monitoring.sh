@@ -63,7 +63,7 @@ kubectl apply -f "../../manifests/egov-monitoring/circuit-breaker-alerts-configm
 
 # PV 생성
 echo -e "${YELLOW}Creating Prometheus PV...${NC}"
-kubectl apply -f "../../manifests/egov-monitoring/prometheus-pv.yaml"
+kubectl apply -f "../../manifests/egov-monitoring/prometheus-pv-nfs.yaml"
 
 # PVC 바인딩 상태 확인
 echo -e "${YELLOW}Waiting for Prometheus PVC to be bound...${NC}"

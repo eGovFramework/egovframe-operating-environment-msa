@@ -39,7 +39,7 @@ cleanup_opensearch() {
     echo -e "${GREEN}Removing OpenSearch StatefulSet and Services...${NC}"
     kubectl delete -f ../../manifests/egov-db/opensearch.yaml 2>/dev/null || true
 
-    kubectl delete -f ../../manifests/egov-db/opensearch-pv.yaml 2>/dev/null || true
+    kubectl delete -f ../../manifests/egov-db/opensearch-pv-nfs.yaml 2>/dev/null || true
 
     # PVC가 Terminating 상태인 경우 강제 삭제
     if kubectl get pvc opensearch-pvc-nfs -n egov-db 2>/dev/null | grep Terminating; then
@@ -76,7 +76,7 @@ cleanup_postgresql() {
     kubectl delete -f ../../manifests/egov-db/postgresql.yaml 2>/dev/null || true
 
     echo -e "${GREEN}Removing PostgreSQL PV and PVC...${NC}"
-    kubectl delete -f ../../manifests/egov-db/postgresql-pv.yaml 2>/dev/null || true
+    kubectl delete -f ../../manifests/egov-db/postgresql-pv-nfs.yaml 2>/dev/null || true
 
     # PVC가 Terminating 상태인 경우 강제 삭제
     if kubectl get pvc postgresql-pvc-nfs -n egov-db 2>/dev/null | grep Terminating; then
@@ -100,7 +100,7 @@ cleanup_redis() {
     kubectl delete -f ../../manifests/egov-db/redis.yaml 2>/dev/null || true
 
     echo -e "${GREEN}Removing Redis PV and PVC...${NC}"
-    kubectl delete -f ../../manifests/egov-db/redis-pv.yaml 2>/dev/null || true
+    kubectl delete -f ../../manifests/egov-db/redis-pv-nfs.yaml 2>/dev/null || true
 
     # PVC가 Terminating 상태인 경우 강제 삭제
     if kubectl get pvc redis-pvc-nfs -n egov-db 2>/dev/null | grep Terminating; then

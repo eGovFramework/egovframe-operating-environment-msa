@@ -37,7 +37,7 @@ kubectl delete secret mysql-secret -n egov-app 2>/dev/null || true
 
 # EgovMobileId PV/PVC 제거
 echo -e "${GREEN}Removing EgovMobileId PV and PVC...${NC}"
-kubectl delete -f "../../manifests/egov-app/egov-mobileid-pv.yaml" 2>/dev/null || true
+kubectl delete -f "../../manifests/egov-app/egov-mobileid-pv-nfs.yaml" 2>/dev/null || true
 
 # PVC가 Terminating 상태인 경우 강제 삭제
 if kubectl get pvc egov-mobileid-pvc -n egov-app 2>/dev/null | grep Terminating; then
@@ -54,7 +54,7 @@ fi
 
 # EgovSearch PV/PVC 제거
 echo -e "${GREEN}Removing EgovSearch PV and PVC...${NC}"
-kubectl delete -f "../../manifests/egov-app/egov-search-pv.yaml" 2>/dev/null || true
+kubectl delete -f "../../manifests/egov-app/egov-search-pv-nfs.yaml" 2>/dev/null || true
 
 # 리소스 제거 완료 대기
 echo -e "\n${YELLOW}Waiting for resources to be terminated...${NC}"
