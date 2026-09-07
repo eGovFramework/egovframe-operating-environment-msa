@@ -92,7 +92,7 @@ start_service() {
     local service_name=$(basename $jar_path .jar)
     local profile=${3:-local}
     
-    # PID를 포함한 로그 파일 경로 생성
+    # 타임스탬프를 포함한 로그 파일 경로 생성
     local log_file="logs/${service_name}_$(date +%s).log"
     
     # 서비스 시작
