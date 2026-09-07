@@ -48,6 +48,10 @@ kubectl apply -f "../../manifests/egov-app/egov-mobileid-pv-nfs.yaml"
 echo -e "${GREEN}Creating EgovSearch PV and PVC...${NC}"
 kubectl apply -f "../../manifests/egov-app/egov-search-pv-nfs.yaml"
 
+# FileUpload PV/PVC 생성
+echo -e "${GREEN}Creating FileUpload PV and PVC...${NC}"
+kubectl apply -f "../../manifests/egov-app/egov-fileupload-pv-nfs.yaml"
+
 # 각 서비스 배포
 SERVICES=(
     "egov-hello"
