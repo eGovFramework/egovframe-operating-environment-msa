@@ -72,6 +72,17 @@ while [[ $(kubectl get pvc prometheus-pvc-nfs -n egov-monitoring -o jsonpath='{.
     sleep 5
 done
 
+# PV 생성
+echo -e "${YELLOW}Creating Loki PV...${NC}"
+kubectl apply -f "../../manifests/egov-monitoring/loki-pv-nfs.yaml"
+
+# PVC 바인딩 상태 확인
+echo -e "${YELLOW}Waiting for Loki PVC to be bound...${NC}"
+while [[ $(kubectl get pvc loki-pvc-nfs -n egov-monitoring -o jsonpath='{.status.phase}') != "Bound" ]]; do
+    echo -e "${YELLOW}Waiting for PVC to be bound...${NC}"
+    sleep 5
+done
+
 # 모니터링 컴포넌트 설치
 echo -e "${YELLOW}Installing monitoring components...${NC}"
 for addon in prometheus grafana kiali jaeger loki alertmanager; do
