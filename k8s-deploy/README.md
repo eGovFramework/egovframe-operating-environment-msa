@@ -23,16 +23,16 @@ k8s-deploy/
 │   │   ├── egov-cmmncode-deployment.yaml    # EgovCmmnCode 배포 파일
 │   │   ├── egov-login-deployment.yaml       # EgovLogin 배포 파일
 │   │   ├── egov-main-deployment.yaml        # EgovMain 배포 파일
-│   │   ├── egov-mobileid-pv.yaml            # EgovMobileId PV 설정 파일
+│   │   ├── egov-mobileid-pv-nfs.yaml         # EgovMobileId PV 설정 파일 (NFS)
 │   │   ├── egov-questionnaire-deployment.yaml  # EgovQuestionnaire 배포 파일
-│   │   ├── egov-search-pv.yaml              # EgovSearch PV 설정 파일
+│   │   ├── egov-search-pv-nfs.yaml           # EgovSearch PV 설정 파일 (NFS)
 │   │   ├── egov-search-deployment.yaml      # EgovSearch 배포 파일
 │   │   ├── egov-hello-deployment.yaml      # EgovHello 배포 파일: 애플리케이션 로그 (INFO) OpenTelemetry Collector로 전송
 │   │   ├── egov-hello-error-deployment.yaml  # EgovHello Error 배포 파일: 애플리케이션 로그 (ERROR) OpenTelemetry Collector로 전송, Circuit Breaker 테스트용
 │   │   ├── virtual-services.yaml           # VirtualService 설정 파일: 로드밸런싱 테스트용
 │   │   └── destination-rules.yaml          # DestinationRule 설정 파일: Circuit Breaker 테스트용
 │   ├── egov-db/            # 데이터베이스 관련 매니페스트
-│   │   ├── mysql-pv.yaml                  # MySQL PV 설정 파일
+│   │   ├── mysql-pv-nfs.yaml               # MySQL PV 설정 파일 (NFS)
 │   │   ├── mysql-secret.yaml              # MySQL 비밀번호 설정 파일
 │   │   ├── mysql-statefulset.yaml         # MySQL StatefulSet 설정 파일
 │   │   ├── mysql-service.yaml             # MySQL 서비스 설정 파일
@@ -42,12 +42,12 @@ k8s-deploy/
 │   │   ├── opensearch-secret.yaml        # OpenSearch 비밀번호 설정 파일
 │   │   ├── opensearch-certs-secret.yaml  # OpenSearch 인증서 설정 파일
 │   │   ├── opensearch-dashboard-deployment.yaml  # OpenSearch Dashboard 배포 파일
-│   │   └── opensearch-pv.yaml             # OpenSearch PV 설정 파일
+│   │   └── opensearch-pv-nfs.yaml          # OpenSearch PV 설정 파일 (NFS)
 │   ├── egov-infra/         # 인프라 서비스 매니페스트
 │   │   ├── gatewayserver-deployment.yaml  # 게이트웨이 서버 배포 파일
 │   │   ├── rabbitmq-service.yaml          # RabbitMQ 서비스 배포 파일
 │   │   ├── rabbitmq-configmap.yaml        # RabbitMQ 환경 변수 설정 파일
-│   │   ├── rabbitmq-pv.yaml               # RabbitMQ PV 설정 파일
+│   │   ├── rabbitmq-pv-nfs.yaml            # RabbitMQ PV 설정 파일 (NFS)
 │   │   └── rabbitmq-deployment.yaml       # RabbitMQ 배포 파일
 │   ├── egov-istio/         # Istio 설치 매니페스트
 │   │   ├── config.yaml       # Istio 설정 파일
@@ -203,58 +203,27 @@ docker images --format "{{.Repository}} {{.Tag}}" | grep " k8s$"  # k8s 태그�
 > 상세: [CI/CD 로컬 보안 재구성 가이드](doc/cicd-local-security-hardening.md)
 
 1. PersistentVolume 설정 확인 및 수정
-각 PV의 hostPath를 로컬 환경에 맞게 수정해야 합니다:
 
-a. MySQL PV 설정 (`k8s-deploy/manifests/egov-db/mysql-pv.yaml`):
+설치 스크립트(`04-setup-db.sh`, `06-setup-infrastructure.sh`, `07-setup-applications.sh` 등)는 기본적으로 아래 `*-pv-nfs.yaml`(NFS 기반, `storageClassName: nfs`로 동적 프로비저닝)을 적용합니다. 이 방식에서는 서비스별 YAML에 `hostPath`를 직접 적는 대신, NFS 서버 주소/경로를 **한 곳**에서만 설정하면 됩니다.
+
+- NFS 프로비저너 설치 절차는 [NFS Provisioner 가이드](../doc/kubernetes/nfs.md) 참고
+- NFS 서버 주소·경로를 변경해야 한다면 `k8s-deploy/manifests/egov-storage/nfs-deployment.yaml`의 `NFS_SERVER`/`NFS_PATH`(및 `volumes.nfs.server`/`path`)를 환경에 맞게 수정 후 재적용:
 ```yaml
-spec:
-  hostPath:
-    path: "/your/local/path/k8s-deploy/data/mysql"  # 로컬 절대 경로로 수정
+env:
+  - name: NFS_SERVER
+    value: 192.168.56.21   # NFS 서버 IP로 수정
+  - name: NFS_PATH
+    value: /srv/nfs         # NFS 공유 경로로 수정
 ```
+- 아래 PV/PVC는 모두 이 `nfs` StorageClass를 통해 자동 프로비저닝되므로, 서비스별 파일에 로컬 절대 경로를 직접 적어 넣을 필요가 없습니다:
+  - MySQL: `k8s-deploy/manifests/egov-db/mysql-pv-nfs.yaml`
+  - OpenSearch: `k8s-deploy/manifests/egov-db/opensearch-pv-nfs.yaml`
+  - RabbitMQ: `k8s-deploy/manifests/egov-infra/rabbitmq-pv-nfs.yaml`
+  - EgovMobileId: `k8s-deploy/manifests/egov-app/egov-mobileid-pv-nfs.yaml`
+  - EgovSearch: `k8s-deploy/manifests/egov-app/egov-search-pv-nfs.yaml`
+- 단, EgovMobileId/EgovSearch는 PVC가 마운트할 설정 데이터(config/model/example/cacerts)를 NFS 공유 경로에 미리 복사해 두어야 합니다. 절차는 [manual-install-scripts.md](scripts/setup/manual-install-scripts.md)의 "설정 파일 전송"/"PV 및 PVC 파일 수정" 단계 참고
 
-b. OpenSearch PV 설정 (`k8s-deploy/manifests/egov-db/opensearch-pv.yaml`):
-```yaml
-spec:
-  hostPath:
-    path: "/your/local/path/k8s-deploy/data/opensearch"  # 로컬 절대 경로로 수정
-```
-
-c. RabbitMQ PV 설정 (`k8s-deploy/manifests/egov-infra/rabbitmq-pv.yaml`):
-```yaml
-spec:
-  hostPath:
-    path: "/your/local/path/k8s-deploy/data/rabbitmq"  # 로컬 절대 경로로 수정
-```
-
-d. EgovMobileId PV 설정 (`k8s-deploy/manifests/egov-app/egov-mobileid-pv.yaml`):
-```yaml
-spec:
-  hostPath:
-    path: "/your/local/path/EgovMobileId/config"  # 로컬 절대 경로로 수정
-```
-
-e. EgovSearch PV 설정 (`k8s-deploy/manifests/egov-app/egov-search-pv.yaml`):
-```yaml
-# Config PV
-spec:
-  hostPath:
-    path: "/your/local/path/EgovSearch-config/config"  # 로컬 절대 경로로 수정
-
-# Model PV
-spec:
-  hostPath:
-    path: "/your/local/path/EgovSearch-config/model"  # 로컬 절대 경로로 수정
-
-# Example PV
-spec:
-  hostPath:
-    path: "/your/local/path/EgovSearch-config/example"  # 로컬 절대 경로로 수정
-
-# Cacerts PV
-spec:
-  hostPath:
-    path: "/your/local/path/EgovSearch-config/cacerts"  # 로컬 절대 경로로 수정
-```
+> NFS 대신 로컬 개발 환경에서 빠르게 구성하려면, 각 서비스의 `*-pv-local-path.yaml`(local-path-provisioner 기반 동적 프로비저닝, 경로 수정 불필요)을 대신 적용할 수도 있습니다.
 
 2. 데이터베이스 초기화 스크립트 실행
 ```bash

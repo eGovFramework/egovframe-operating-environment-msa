@@ -770,20 +770,26 @@ kubectl describe pv <pv-name>
 kubectl describe pvc <pvc-name> -n <namespace>
 ```
 
-### hostPath 타입 PV의 경로를 변경하려면 어떻게 해야 하나요?
+### PV의 저장소 경로를 변경하려면 어떻게 해야 하나요?
+
+기본 설치 스크립트가 적용하는 `*-pv-nfs.yaml`(예: `k8s-deploy/manifests/egov-db/mysql-pv-nfs.yaml`)은 `storageClassName: nfs`로 동적 프로비저닝되는 PVC이며, `spec.hostPath.path`를 갖고 있지 않습니다. 이 경우 경로 변경은 서비스별 YAML이 아니라 NFS 서버 쪽에서 이루어집니다:
 
 - 먼저 기존 데이터를 백업합니다.
 - 관련 워크로드를 중지합니다.
-- PV/PVC를 삭제합니다.
-- YAML 파일에서 `spec.hostPath.path` 값을 수정합니다:
-
-예시 (`k8s-deploy/manifests/egov-db/mysql-pv.yaml`):
+- `k8s-deploy/manifests/egov-storage/nfs-deployment.yaml`의 `NFS_SERVER`/`NFS_PATH`(및 `volumes.nfs.server`/`path`)를 새 주소·경로로 수정 후 재적용합니다 (자세한 절차는 [NFS Provisioner 가이드](../doc/kubernetes/nfs.md) 참고):
 ```yaml
-spec:
-  hostPath:
-    path: "/your/new/path/data/mysql"
+env:
+  - name: NFS_SERVER
+    value: 192.168.56.21   # 새 NFS 서버 IP
+  - name: NFS_PATH
+    value: /srv/nfs         # 새 NFS 공유 경로
 ```
+- 기존 데이터를 새 NFS 공유 경로로 복사한 뒤 워크로드를 재시작합니다.
 
+로컬 개발 환경에서 `*-pv-hostpath.yaml`(PostgreSQL/Redis 등 일부 서비스 한정) 또는 과거 방식의 hostPath 기반 PV를 직접 사용하는 경우에는 기존과 동일하게 `spec.hostPath.path` 값을 수정하면 됩니다:
+
+- PV/PVC를 삭제합니다.
+- YAML 파일에서 `spec.hostPath.path` 값을 수정합니다.
 - 수정된 PV/PVC를 다시 생성합니다.
 - 워크로드를 재시작합니다.
 
