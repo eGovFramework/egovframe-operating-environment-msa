@@ -14,9 +14,9 @@ k8s-deploy/
 │   └── opensearch/         # OpenSearch 데이터 디렉토리
 │       └── nodes/          # OpenSearch 노드 데이터 디렉토리
 ├── manifests/             # Kubernetes 리소스 매니페스트 디렉토리
-│   ├── egov-common/           # 공통 환경 변수 설정 매니페스트
+│   ├── common/                # 공통 환경 변수 설정 매니페스트
 │   │   ├── egov-common-configmap.yaml       # 공통 환경 변수 설정 파일
-│   │   ├── egov-global-configmap.yaml       # 전역 환경 변수 설정 파일
+│   │   ├── egov-global-configmap-local.yaml # 전역 환경 변수 설정 파일
 │   ├── egov-app/           # 애플리케이션 서비스 매니페스트
 │   │   ├── egov-author-deployment.yaml       # EgovAuthor 배포 파일
 │   │   ├── egov-board-deployment.yaml       # EgovBoard 배포 파일
@@ -68,23 +68,21 @@ k8s-deploy/
     │   ├── 01-setup-istio.sh         # Istio 설치 스크립트
     │   ├── 02-setup-namespaces.sh    # 네임스페이스 설정 스크립트
     │   ├── 03-setup-monitoring.sh    # 모니터링 도구 설치 스크립트
-    │   ├── 04-setup-mysql.sh         # MySQL 설치 스크립트
-    │   ├── 05-setup-opensearch.sh    # OpenSearch 설치 스크립트
+    │   ├── 04-setup-db.sh            # 데이터베이스 설치 스크립트
+    │   ├── 05-setup-cicd.sh          # CICD 서비스 설치 스크립트
     │   ├── 06-setup-infrastructure.sh # 인프라 서비스 설치 스크립트
     │   ├── 07-setup-applications.sh  # 애플리케이션 서비스 배포 스크립트
-    │   ├── 08-setup-cicd.sh  # CICD 서비스 설치 스크립트
     │   ├── 09-show-access-info.sh  # 서비스 접근 정보 출력 스크립트
-    │   └── manual-install-guide.md  # 수동 설치 가이드 스크립트
+    │   └── manual-install-scripts.md  # 수동 설치 가이드 스크립트
     ├── cleanup/           # 정리 스크립트
     │   ├── cleanup.sh        # 전체 정리 스크립트
     │   ├── 01-cleanup-applications.sh    # 애플리케이션 정리 스크립트
     │   ├── 02-cleanup-infrastructure.sh  # 인프라 정리 스크립트
-    │   ├── 03-cleanup-mysql.sh         # MySQL 정리 스크립트
-    │   ├── 04-cleanup-opensearch.sh    # OpenSearch 정리 스크립트
+    │   ├── 03-cleanup-db.sh            # 데이터베이스 정리 스크립트
+    │   ├── 04-cleanup-cicd.sh          # CICD 정리 스크립트
     │   ├── 05-cleanup-monitoring.sh    # 모니터링 도구 정리 스크립트
     │   ├── 06-cleanup-namespaces.sh    # 네임스페이스 정리 스크립트
-    │   ├── 07-cleanup-istio.sh         # Istio 정리 스크립트
-    │   └── 08-cleanup-cicd.sh          # CICD 정리 스크립트
+    │   └── 07-cleanup-istio.sh         # Istio 정리 스크립트
     └── utils/           # 유틸리티 스크립트
         ├── test-istio/               # Istio 테스트 스크립트
         │   ├── 1-test-loadbalancing.sh  # 로드밸런싱 테스트 스크립트
@@ -240,8 +238,7 @@ cd k8s-deploy/scripts/setup
 ./01-setup-istio.sh
 ./02-setup-namespaces.sh
 ./03-setup-monitoring.sh
-./04-setup-mysql.sh
-./05-setup-opensearch.sh
+./04-setup-db.sh
 ./06-setup-infrastructure.sh
 ./07-setup-applications.sh
 ```

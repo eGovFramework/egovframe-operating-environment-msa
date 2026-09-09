@@ -184,7 +184,7 @@ kubectl get secret mysql-secret -n egov-db -o yaml | sed 's/namespace: egov-db/n
 ```
 #### 2) fileupload pv 생성
 ```bash
-kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov-app/egov-fileupload-pvc-nfs.yaml
+kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov-app/egov-fileupload-pv-nfs.yaml
 ```
 
 #### 3) Application 배포

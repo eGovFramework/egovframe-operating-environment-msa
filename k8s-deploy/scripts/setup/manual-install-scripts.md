@@ -282,7 +282,7 @@ kubectl wait --for=condition=Ready pods --all -n istio-system --timeout=300s
 
 ```bash
 # 전역 ConfigMap 생성 (hostPath 경로)
-kubectl apply -f ../../manifests/common/egov-global-configmap.yaml
+kubectl apply -f ../../manifests/common/egov-global-configmap-local.yaml
 
 # 네임스페이스 생성
 kubectl create namespace egov-monitoring
