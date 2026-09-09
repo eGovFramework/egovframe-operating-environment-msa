@@ -35,6 +35,10 @@ kubectl delete configmap -n egov-app --all
 echo -e "${GREEN}Removing MySQL Secret in egov-app namespace...${NC}"
 kubectl delete secret mysql-secret -n egov-app 2>/dev/null || true
 
+# RabbitMQ Secret 제거
+echo -e "${GREEN}Removing RabbitMQ Secret in egov-app namespace...${NC}"
+kubectl delete secret rabbitmq-secret -n egov-app 2>/dev/null || true
+
 # EgovMobileId PV/PVC 제거
 echo -e "${GREEN}Removing EgovMobileId PV and PVC...${NC}"
 kubectl delete -f "../../manifests/egov-app/egov-mobileid-pv-nfs.yaml" 2>/dev/null || true
