@@ -203,9 +203,9 @@ k8s-deploy/
 │   ├── sonarqube/         # SonarQube 데이터 디렉토리
 │   └── nexus/         # Nexus 데이터 디렉토리
 ├── manifests/             # Kubernetes 리소스 매니페스트 디렉토리
-│   ├── egov-common/           # 공통 환경 변수 설정 매니페스트
+│   ├── common/                # 공통 환경 변수 설정 매니페스트
 │   │   ├── egov-common-configmap.yaml       # 공통 환경 변수 설정 파일
-│   │   └── egov-global-configmap.yaml       # 전역 환경 변수 설정 파일
+│   │   └── egov-global-configmap-local.yaml # 전역 환경 변수 설정 파일
 │   ├── egov-cicd/          # CICD 서비스 매니페스트
 │   │   ├── jenkins-statefulset.yaml  # Jenkins StatefulSet 설정 파일
 │   │   ├── gitlab-statefulset.yaml  # GitLab StatefulSet 설정 파일
@@ -250,23 +250,21 @@ k8s-deploy/
     │   ├── 01-setup-istio.sh         # Istio 설치 스크립트
     │   ├── 02-setup-namespaces.sh    # 네임스페이스 설정 스크립트
     │   ├── 03-setup-monitoring.sh    # 모니터링 도구 설치 스크립트
-    │   ├── 04-setup-mysql.sh         # MySQL 설치 스크립트
-    │   ├── 05-setup-opensearch.sh    # OpenSearch 설치 스크립트
+    │   ├── 04-setup-db.sh            # 데이터베이스 설치 스크립트
+    │   ├── 05-setup-cicd.sh          # CICD 서비스 설치 스크립트
     │   ├── 06-setup-infrastructure.sh # 인프라 서비스 설치 스크립트
     │   ├── 07-setup-applications.sh  # 애플리케이션 서비스 배포 스크립트
-    │   ├── 08-setup-cicd.sh  # CICD 서비스 설치 스크립트
     │   ├── 09-show-access-info.sh  # 서비스 접근 정보 출력 스크립트
-    │   └── manual-install-guide.md  # 수동 설치 가이드 스크립트
+    │   └── manual-install-scripts.md  # 수동 설치 가이드 스크립트
     ├── cleanup/           # 정리 스크립트
     │   ├── cleanup.sh        # 전체 정리 스크립트
     │   ├── 01-cleanup-applications.sh    # 애플리케이션 정리 스크립트
     │   ├── 02-cleanup-infrastructure.sh  # 인프라 정리 스크립트
-    │   ├── 03-cleanup-mysql.sh         # MySQL 정리 스크립트
-    │   ├── 04-cleanup-opensearch.sh    # OpenSearch 정리 스크립트
+    │   ├── 03-cleanup-db.sh            # 데이터베이스 정리 스크립트
+    │   ├── 04-cleanup-cicd.sh          # CICD 정리 스크립트
     │   ├── 05-cleanup-monitoring.sh    # 모니터링 도구 정리 스크립트
     │   ├── 06-cleanup-namespaces.sh    # 네임스페이스 정리 스크립트
-    │   ├── 07-cleanup-istio.sh         # Istio 정리 스크립트
-    │   └── 08-cleanup-cicd.sh          # CICD 정리 스크립트
+    │   └── 07-cleanup-istio.sh         # Istio 정리 스크립트
     └── utils/           # 유틸리티 스크립트
         ├── test-istio/               # Istio 테스트 스크립트
         │   ├── 1-test-loadbalancing.sh  # 로드밸런싱 테스트 스크립트
@@ -552,7 +550,7 @@ docker images --format "{{.Repository}} {{.Tag}}" | grep " k8s$"  # k8s 태그�
 #### 4.3.1 PersistentVolume 설정
 
 1. Global ConfigMap 설정
-먼저 `k8s-deploy/manifests/common/egov-global-configmap.yaml` 파일에서 환경에 맞는 경로를 설정합니다:
+먼저 `k8s-deploy/manifests/common/egov-global-configmap-local.yaml` 파일에서 환경에 맞는 경로를 설정합니다:
 
 ```yaml
 apiVersion: v1
@@ -576,7 +574,7 @@ data:
 
 2. ConfigMap 적용
 ```bash
-kubectl apply -f k8s-deploy/manifests/common/egov-global-configmap.yaml
+kubectl apply -f k8s-deploy/manifests/common/egov-global-configmap-local.yaml
 ```
 
 #### 4.3.2 필요한 설정 파일 준비
@@ -647,25 +645,20 @@ Istio 서비스 메시를 설치하고 구성한다:
 - 각 컴포넌트의 정상 동작 확인
 
 #### 4.3.5 데이터베이스 설치
-MySQL과 OpenSearch를 설치한다:
+MySQL, OpenSearch, PostgreSQL, Redis를 설치한다:
 
-1. MySQL 설치 (`04-setup-mysql.sh`):
+1. 데이터베이스 설치 (`04-setup-db.sh`):
 ```bash
-./04-setup-mysql.sh
+./04-setup-db.sh
 ```
 
-이 스크립트는 다음 작업을 수행한다:
+이 스크립트는 MySQL 설치 시 다음 작업을 수행한다:
 - MySQL StatefulSet 및 Service 생성
 - 영구 볼륨 및 클레임 설정
 - 초기 데이터베이스 및 사용자 설정
 - MySQL 파드의 Ready 상태 확인
 
-2. OpenSearch 설치 (`05-setup-opensearch.sh`):
-```bash
-./05-setup-opensearch.sh
-```
-
-이 스크립트는 다음 작업을 수행한다:
+2. 이어서 같은 스크립트가 OpenSearch를 설치하며, 다음 작업을 수행한다:
 - OpenSearch StatefulSet 및 Service 생성
 - OpenSearch Dashboard 배포
 - 영구 볼륨 및 클레임 설정
@@ -1338,7 +1331,7 @@ CICD(Continuous Integration/Continuous Deployment) 환경은 다음 컴포넌트
 제공된 스크립트를 사용하여 모든 CICD 컴포넌트를 자동으로 설치할 수 있습니다:
 
 ```bash
-./scripts/setup/08-setup-cicd.sh
+./scripts/setup/05-setup-cicd.sh
 ```
 
 이 스크립트는 다음 작업을 수행합니다:
