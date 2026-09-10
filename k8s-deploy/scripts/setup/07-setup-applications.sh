@@ -40,6 +40,10 @@ echo -e "${YELLOW}Installing application services...${NC}"
 echo -e "${GREEN}Copying MySQL Secret from egov-db to egov-app namespace...${NC}"
 kubectl get secret mysql-secret -n egov-db -o yaml | sed 's/namespace: egov-db/namespace: egov-app/' | kubectl apply -f -
 
+# RabbitMQ Secret 생성
+echo -e "${GREEN}Creating RabbitMQ Secret in egov-app namespace...${NC}"
+kubectl apply -f "../../manifests/egov-infra/rabbitmq-secret.yaml"
+
 # MobileId PV/PVC 생성
 echo -e "${GREEN}Creating MobileId PV and PVC...${NC}"
 kubectl apply -f "../../manifests/egov-app/egov-mobileid-pv-nfs.yaml"

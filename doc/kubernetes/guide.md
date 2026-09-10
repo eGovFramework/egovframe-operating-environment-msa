@@ -178,9 +178,10 @@ kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov
 ```
 
 ### 8. Application 배포
-#### 1) MySQL Secret 복사
+#### 1) Secret 준비
 ```bash
 kubectl get secret mysql-secret -n egov-db -o yaml | sed 's/namespace: egov-db/namespace: egov-app/' | kubectl apply -f -
+kubectl apply -f ~/egovframe-operating-environment-msa/k8s-deploy/manifests/egov-infra/rabbitmq-secret.yaml
 ```
 #### 2) fileupload pv 생성
 ```bash

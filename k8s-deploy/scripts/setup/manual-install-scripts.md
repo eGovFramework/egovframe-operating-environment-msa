@@ -392,10 +392,11 @@ kubectl rollout status deployment/gateway-server -n egov-infra --timeout=300s
 
 ## 8. 애플리케이션 서비스 설치
 
-### MySQL Secret 복사 (egov-db -> egov-app)
+### Secret 준비
 ```bash
 cd ../egov-app
 kubectl get secret mysql-secret -n egov-db -o yaml | sed 's/namespace: egov-db/namespace: egov-app/' | kubectl apply -f -
+kubectl apply -f ../egov-infra/rabbitmq-secret.yaml
 ```
 
 ### PV 및 PVC 생성
